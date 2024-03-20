@@ -20,8 +20,9 @@ const KaKaoButtonStyled = styled.button`
   border-radius: 10px;
 
   display: flex;
-  flex-direction: center;
+  justify-content: center;
   align-items: center;
+
   font-weight: 500;
 
   img {
