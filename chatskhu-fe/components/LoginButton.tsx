@@ -15,6 +15,8 @@ const KaKaoButtonStyled = styled.button`
   width: 242px;
   height: 45px;
 
+  margin-top: 10em;
+
   background-color: #fee500;
   border: none;
   border-radius: 10px;
