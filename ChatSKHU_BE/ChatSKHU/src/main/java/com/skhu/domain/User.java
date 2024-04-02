@@ -1,10 +1,7 @@
 package com.skhu.domain;
 
 import jakarta.persistence.Entity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -12,5 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User extends UserBase{
     private String nickname;
-    private String phone;
+
+    @Builder
+    public User(String email, String password, String nickname){
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+    }
 }
