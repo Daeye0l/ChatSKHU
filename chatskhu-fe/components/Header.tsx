@@ -1,61 +1,66 @@
-import Image from "next/image";
-import styled from "styled-components";
-import sidebar from "/public/images/sidebar.png";
-import addbutton from "/public/images/addbutton.png";
-import hunsu from "/public/images/hunsu.png";
-import { theme } from "../styles/theme";
-import { useStore } from "../store/\bstore";
+import Image from 'next/image'
+import styled from 'styled-components'
+import sidebar from '/public/images/sidebar.png'
+import addbutton from '/public/images/addbutton.png'
+import hunsu from '/public/images/hunsu.png'
+import { theme } from '../styles/theme'
+import { useStore } from '../store/\bstore'
 
 interface Props {
-  width?: string;
-  position?: boolean;
-  border?: string;
-  padding?: string;
-  src?: string;
+   width?: string
+   position?: boolean
+   border?: string
+   padding?: string
+   src?: string
 }
 const Header = ({ ...props }: Props) => {
-  const img_src = props.src;
-  const { isOpen, setIsOpen } = useStore();
+   const img_src = props.src
+   const { isOpen, setIsOpen } = useStore()
 
-  return (
-    <>
-      <HeaderContainer {...props}>
-        {img_src ? (
-          <Image src={hunsu} alt="sidebar_logo" width={40} height={40} />
-        ) : (
-          <div onClick={() => setIsOpen(!isOpen)}>
-            <Image src={sidebar} alt="sidebar_logo" width={20} height={20} />
-          </div>
-        )}
-        <span>chatSKHU</span>
-        <Image src={addbutton} alt="sidebar_logo" width={20} height={20} />
-      </HeaderContainer>
-    </>
-  );
-};
-export default Header;
+   return (
+      <>
+         <HeaderContainer {...props}>
+            {img_src ? (
+               <Image src={hunsu} alt="sidebar_logo" width={40} height={40} />
+            ) : (
+               <div onClick={() => setIsOpen(!isOpen)}>
+                  <Image
+                     src={sidebar}
+                     alt="sidebar_logo"
+                     width={20}
+                     height={20}
+                  />
+               </div>
+            )}
+            <span>chatSKHU</span>
+            <Image src={addbutton} alt="sidebar_logo" width={20} height={20} />
+         </HeaderContainer>
+      </>
+   )
+}
+export default Header
 
 const HeaderContainer = styled.header<Props>`
-  width: ${(props) => props.width || `390px`};
-  padding: ${(props) => props.padding || `0.8em 0.5em`};
+   width: ${(props) => props.width || `390px`};
+   padding: ${(props) => props.padding || `0.8em 0.5em`};
 
-  display: flex;
-  ${(props) => (props.position ? `` : `position : fixed`)};
-  align-items: center;
+   display: flex;
+   ${(props) => (props.position ? `` : `position : fixed`)};
+   align-items: center;
 
-  z-index: 1;
-  background-color: white;
-  border-bottom: ${(props) =>
-    props.border || `0.2px solid ${theme.color.grayColor}`};
+   z-index: 1;
+   background-color: white;
+   border-bottom: ${(props) =>
+      props.border || `0.2px solid ${theme.color.grayColor}`};
 
-  span {
-    font-size: 20px;
-    font-weight: 600;
-    flex-grow: 1;
-    text-align: center;
-  }
+   span {
+      font-size: 20px;
+      font-weight: 600;
+      flex-grow: 1;
+      text-align: center;
+   }
 
-  img {
-    cursor: pointer;
-  }
-`;
+   img {
+      cursor: pointer;
+   }
+`
