@@ -28,11 +28,10 @@ public class TokenProvider {
     private final Key key;
     private final long tokenValidityTime;
 
-    public TokenProvider(@Value("${jwt.secret}") String key,
-                         @Value("${jwt.token-validity-in-milliseconds}") long tokenValidityTime) {
+    public TokenProvider(@Value("${jwt.secret}") String key) {
         byte[] keyBytes = Decoders.BASE64.decode(key);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.tokenValidityTime = tokenValidityTime;
+        this.tokenValidityTime = 36000;
     }
 
     public String createToken(String subject, UserLevel userLevel) {
@@ -44,7 +43,7 @@ public class TokenProvider {
                 .claim("userLevel", userLevel)
                 .setIssuedAt(now)
                 .setExpiration(tokenExpiredTime)
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
