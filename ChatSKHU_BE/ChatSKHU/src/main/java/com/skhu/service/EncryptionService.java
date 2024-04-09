@@ -4,14 +4,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EncryptionService {
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public EncryptionService(){
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+public interface EncryptionService {
+    String encrypt(String input);
+    boolean match(String input, String encrypted);
     }
-
-    public String encrypt(String input){
-        return bCryptPasswordEncoder.encode(input);
-    }
-}
