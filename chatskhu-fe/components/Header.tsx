@@ -8,7 +8,7 @@ import { useStore } from '../store/\bstore'
 
 interface Props {
    width?: string
-   position?: boolean
+   position?: string
    border?: string
    padding?: string
    src?: string
@@ -45,11 +45,13 @@ const HeaderContainer = styled.header<Props>`
    padding: ${(props) => props.padding || `0.8em 0.5em`};
 
    display: flex;
-   ${(props) => (props.position ? `` : `position : fixed`)};
+   ${(props) =>
+      props.position === 'sticky' ? `position:sticky` : `position : fixed`};
+   top: 0px;
    align-items: center;
 
    z-index: 1;
-   background-color: white;
+   background-color: inherit;
    border-bottom: ${(props) =>
       props.border || `0.2px solid ${theme.color.grayColor}`};
 
