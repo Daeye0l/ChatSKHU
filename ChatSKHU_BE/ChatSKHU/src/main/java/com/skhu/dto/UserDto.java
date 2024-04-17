@@ -1,5 +1,6 @@
 package com.skhu.dto;
 
+import com.skhu.domain.UserLevel;
 import com.skhu.service.EncryptionService;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -53,4 +54,40 @@ public class UserDto {
     public static class LoginResponse {
         private String token;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UserResponse {
+
+        private Long id;
+
+        private String email;
+
+        private String nickname;
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UserSearchRequest {
+
+        private Long id;
+
+        private String email;
+
+        private String nickname;
+
+        private UserLevel userLevel;
+
+        @Builder
+        public UserSearchRequest(Long id, String email, String nickname, UserLevel userLevel) {
+            this.id = id;
+            this.email = email;
+            this.nickname = nickname;
+            this.userLevel = userLevel;
+        }
+
+    }
+
 }
