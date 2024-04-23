@@ -66,6 +66,11 @@ public class UserDto {
         private String email;
 
         private String nickname;
+
+        private String userLevel;
+
+        private String[] socialTypes;
+
     }
 
     @Getter
