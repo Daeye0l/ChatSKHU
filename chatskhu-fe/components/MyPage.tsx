@@ -9,16 +9,16 @@ import { theme } from '../styles/theme';
 
 const MyPage = () => {
     return (
-        <>
-            <div>
-                <Image src={backarrow} width={20} height={20} alt="backarrow" />
-            </div>
-            <h3>마이페이지</h3>
+        <EntireMyPageContainer>
+            <BackArrow>
+                <Image src={backarrow} width={30} height={30} alt="backarrow" />
+            </BackArrow>
+            <h1>마이페이지</h1>
             <Container>
-                <ItemContainer>
+                <ImgContainer>
                     <Image src={kakaoProfileImage} width={85} height={85} alt="mypage" />
                     <p>김신아</p>
-                </ItemContainer>
+                </ImgContainer>
                 <FlexContainer>
                     <ItemContainer>
                         <Image src={bookmark} width={40} height={40} alt="bookmark" />
@@ -69,17 +69,30 @@ const MyPage = () => {
                     </tbody>
                 </table>
             </FooterContainer>
-        </>
+        </EntireMyPageContainer>
     );
 };
 export default MyPage;
 
+const EntireMyPageContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100vh;
+
+    h1 {
+        font-size: 1.2rem;
+    }
+`;
+
 const Container = styled.div`
     width: 80%;
+    height: 20rem;
     display: flex;
     flex-direction: column;
 
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 
     border-radius: 1rem;
@@ -87,9 +100,21 @@ const Container = styled.div`
 `;
 
 const FlexContainer = styled.div`
+    width: 100%;
     display: flex;
+    justify-content: space-around;
 `;
+const ImgContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
+    img {
+        border-radius: 100%;
+        margin-bottom: 1rem;
+    }
+`;
 const ItemContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -97,9 +122,12 @@ const ItemContainer = styled.div`
     justify-content: center;
     align-items: center;
 
-    img {
-        margin: 0.5rem;
-        border-radius: 100%;
+    img:first-child {
+        margin: 0.6rem;
+    }
+
+    p {
+        font-size: 0.7rem;
     }
 `;
 
@@ -117,10 +145,6 @@ const FooterContainer = styled.footer`
         table-layout: fixed;
         width: 100%;
     }
-
-    tbody td:first-child {
-    }
-
     td {
         color: #a4a4a4;
         font-size: 0.8rem;
@@ -131,4 +155,9 @@ const FooterContainer = styled.footer`
         font-size: 1rem;
         font-weight: 800;
     }
+`;
+
+const BackArrow = styled.div`
+    align-self: flex-start;
+    margin-top: 2rem;
 `;
