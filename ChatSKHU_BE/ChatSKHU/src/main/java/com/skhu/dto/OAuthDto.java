@@ -58,10 +58,6 @@ public class OAuthDto {
         @Size(min = 2, max = 10, message = "닉네임은 2자 이상 10자 이하로 입력해주세요.")
         private String nickname;
 
-        @NotBlank(message = "전화번호를 입력해주세요.")
-        @Pattern(regexp = "(01[016789])(\\d{3,4})(\\d{4})", message = "올바른 휴대폰 번호를 입력해주세요.")
-        private String phone;
-
     }
 
 }

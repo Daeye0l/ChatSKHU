@@ -1,5 +1,6 @@
 package com.skhu.config;
 
+import com.skhu.error.CustomAuthenticationEntryPoint;
 import com.skhu.jwt.JwtFilter;
 import com.skhu.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class SecurityConfig {
                                 .requestMatchers("/**").permitAll()
                                 .anyRequest().permitAll()
                 )
-//                .exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+                .exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

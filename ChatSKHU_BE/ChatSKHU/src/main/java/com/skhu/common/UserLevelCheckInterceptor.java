@@ -1,6 +1,5 @@
 package com.skhu.common;
 
-
 import com.skhu.domain.User;
 import com.skhu.error.CustomException;
 import com.skhu.repository.UserRepository;
@@ -11,10 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.security.Principal;
 
 import static com.skhu.error.ErrorCode.*;
+
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +25,10 @@ public class UserLevelCheckInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
+        if (handler instanceof ResourceHttpRequestHandler) {
+            // 정적 자원을 처리하는 핸들러인 경우 바로 true 반환
+            return true;
+        }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         UserLevelCheck userLevelCheck = handlerMethod.getMethodAnnotation(UserLevelCheck.class);
 
