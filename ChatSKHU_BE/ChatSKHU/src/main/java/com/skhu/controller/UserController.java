@@ -1,5 +1,8 @@
 package com.skhu.controller;
 
+import com.skhu.common.CurrentUser;
+import com.skhu.common.UserLevelCheck;
+import com.skhu.dto.OAuthDto;
 import com.skhu.dto.UserDto;
 import com.skhu.service.LoginService;
 import com.skhu.service.UserService;
@@ -29,5 +32,15 @@ public class UserController {
     @PostMapping("/login")
     public UserDto.LoginResponse login(@Valid @RequestBody UserDto.LoginRequest request){
         return loginService.login(request);
+    }
+    @PostMapping("/login/oauth")
+    public ResponseEntity<UserDto.LoginResponse> loginOAuth(@Valid @RequestBody OAuthDto.LoginRequest request) {
+        return ResponseEntity.ok(loginService.socialLogin(request));
+    }
+
+    @GetMapping
+    @UserLevelCheck
+    public ResponseEntity<UserDto.UserResponse> myPage(@CurrentUser String email) {
+        return ResponseEntity.ok(userService.findByEmail(email));
     }
 }
