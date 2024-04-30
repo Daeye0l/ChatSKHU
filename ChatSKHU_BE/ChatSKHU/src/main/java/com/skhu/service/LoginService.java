@@ -49,12 +49,8 @@ public class LoginService {
     private UserDto.LoginResponse createTokenForUser(User user) {
         String email = user.getEmail();
         UserLevel level = user.getUserLevel();
+        return tokenProvider.createToken(email, level);
 
-        String token = tokenProvider.createToken(email, level);
-
-        return UserDto.LoginResponse.builder()
-                .token(token)
-                .build();
     }
 
     @Transactional

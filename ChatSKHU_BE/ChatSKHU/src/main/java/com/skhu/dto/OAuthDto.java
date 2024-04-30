@@ -1,15 +1,12 @@
 package com.skhu.dto;
 
 
+import com.skhu.domain.UserLevel;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 public class OAuthDto {
 
@@ -39,6 +36,10 @@ public class OAuthDto {
 
         private String nickname;
 
+        private String imageUrl;
+
+        private UserLevel userLevel;
+
     }
 
     @Getter
@@ -58,6 +59,10 @@ public class OAuthDto {
         @Size(min = 2, max = 10, message = "닉네임은 2자 이상 10자 이하로 입력해주세요.")
         private String nickname;
 
+    }
+    @Data
+    public static class KakaoLoginRequest{
+        private String accessToken;
     }
 
 }

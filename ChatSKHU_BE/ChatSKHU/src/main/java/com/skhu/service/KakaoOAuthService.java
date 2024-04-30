@@ -2,8 +2,14 @@ package com.skhu.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.skhu.domain.User;
+import com.skhu.domain.UserBase;
+import com.skhu.domain.UserLevel;
 import com.skhu.dto.OAuthDto;
+import com.skhu.dto.UserDto;
 import com.skhu.error.CustomException;
+import com.skhu.jwt.TokenProvider;
+import com.skhu.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -30,6 +36,8 @@ public class KakaoOAuthService implements OAuthService {
     private String redirectUri;
 
     private final RestTemplate restTemplate;
+    private final TokenProvider tokenProvider;
+    private final UserRepository userRepository;
 
     private HttpEntity<MultiValueMap<String, String>> createRequestEntityToGetAccessToken(String code) {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -61,6 +69,7 @@ public class KakaoOAuthService implements OAuthService {
                 .build();
     }
 
+
     @Override
     public OAuthDto.LoginResponse getAccessToken(String code) {
         String requestUrl = "https://kauth.kakao.com/oauth/token";
@@ -71,6 +80,7 @@ public class KakaoOAuthService implements OAuthService {
         if (!responseEntity.getStatusCode().is2xxSuccessful()) {
             throw new CustomException(FAILED_TO_KAKAO_LOGIN);
         }
+
 
         return parseAccessToken(responseEntity);
     }
@@ -103,11 +113,18 @@ public class KakaoOAuthService implements OAuthService {
                 .get("nickname")
                 .getAsString();
 
+        String imageUrl = element.getAsJsonObject()
+                .get("properties")
+                .getAsJsonObject()
+                .get("profile_image")
+                .getAsString();
+
         return OAuthDto.UserResponse.builder()
                 .socialUid(socialUid)
                 .socialType("KAKAO")
                 .email(email)
                 .nickname(nickname)
+                .imageUrl(imageUrl)
                 .build();
     }
 
@@ -124,5 +141,30 @@ public class KakaoOAuthService implements OAuthService {
 
         return parseUserInfo(responseEntity);
     }
+//    OAuthDto.LoginResponse token = kakaoOAuthService.getAccessToken(code);
+//    OAuthDto.UserResponse userInfo = kakaoOAuthService.getUserInfo(token.getAccessToken());
+//        if(userRepository.findByEmail(userInfo.getEmail()).isEmpty()){
+//        userRepository.save(User.builder()
+//                .email(userInfo.getEmail())
+//                .build());
+//    }
 
+    public void saveUserInfo(String accessToken) {
+        OAuthDto.UserResponse userInfo = getUserInfo(accessToken);
+        userRepository.save(User.builder()
+                .email(userInfo.getEmail())
+                .imageUrl(userInfo.getImageUrl())
+                .build());
+    }
+
+    public UserDto.LoginResponse login(String accessToken) {
+        if (userRepository.findByEmail(getUserInfo(accessToken).getEmail()).isEmpty()) {
+            saveUserInfo(accessToken);
+        }
+        OAuthDto.UserResponse userInfo = getUserInfo(accessToken);
+        String email = userInfo.getEmail();
+        UserLevel userLevel = userInfo.getUserLevel();
+        UserDto.LoginResponse token = tokenProvider.createToken(email, userLevel);
+        return token;
+    }
 }
