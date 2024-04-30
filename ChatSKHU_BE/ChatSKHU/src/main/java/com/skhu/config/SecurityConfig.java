@@ -24,8 +24,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${cors.allowed-origins}")
-    private String[] allowedOrigins;
+//    @Value("${cors.allowed-origins}")
+//    private String[] allowedOrigins;
 
     private final TokenProvider tokenProvider;
 
@@ -51,7 +51,7 @@ public class SecurityConfig {
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(List.of(allowedOrigins));
+//        configuration.setAllowedOriginPatterns(List.of(allowedOrigins));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Access-Control-Allow-Credentials", "Authorization", "Set-Cookie"));
