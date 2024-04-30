@@ -11,7 +11,7 @@ public class GPTConfig {
 	private String apiKey;
 	
 	@Bean
-	public RestTemplate restTemplate() {
+	public RestTemplate gptRestTemplate() {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getInterceptors().add((request, body, execution) -> {
 			request.getHeaders().add("Authorization", "Bearer " + apiKey);

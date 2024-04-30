@@ -17,15 +17,17 @@ import static jakarta.persistence.CascadeType.ALL;
 @AllArgsConstructor
 public class User extends UserBase{
     private String nickname;
+    private String imageUrl;
 
     @OneToMany(mappedBy = "user", cascade = ALL, orphanRemoval = true)
     private Set<SocialConnection> socialConnections = new HashSet<>();
 
     @Builder
-    public User(String email, String password, String nickname){
+    public User(String email, String password, String nickname, String imageUrl){
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.imageUrl = imageUrl;
         this.userLevel = UNAUTH;
 
     }
