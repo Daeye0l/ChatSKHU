@@ -44,6 +44,9 @@ openai: # common 프로파일에 openai설정 추가
   model: gpt-3.5-turbo
   gpt-api-key: ${OPENAI_API_KEY}
 
+jwt:
+  secret: ${JWT_SECRET}
+
 ---
 spring:
   config:
