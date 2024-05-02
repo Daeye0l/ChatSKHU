@@ -6,6 +6,7 @@ import com.skhu.dto.OAuthDto;
 import com.skhu.dto.UserDto;
 import com.skhu.service.LoginService;
 import com.skhu.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,16 @@ public class UserController {
 
     private final UserService userService;
     private final LoginService loginService;
-
+    @Operation(
+            summary = "회원가입",
+            description = "소셜 로그인 후 사용자 정보 받는 API"
+    )
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@Valid @RequestBody UserDto.SignUpRequest request){
         userService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
 
     @PostMapping("/login")
     public UserDto.LoginResponse login(@Valid @RequestBody UserDto.LoginRequest request){
