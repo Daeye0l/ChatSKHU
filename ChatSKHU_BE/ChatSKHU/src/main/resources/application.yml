@@ -1,3 +1,12 @@
+server:
+  port: 8443
+  ssl:
+    key-store: /etc/letsencrypt/live/chatskhu.duckdns.org/keystore.p12
+    key-store-password: ${KEY_STORE_PASSWORD}
+    key-store-type: pkcs12
+    key-alias: tomcat
+    enabled: true
+    
 spring:
   profiles:
     active: local
@@ -79,11 +88,3 @@ springdoc:
     disable-swagger-default-url: true
     display-request-duration: true
 
-server:
-  port: 8443
-  ssl:
-    key-store: /etc/letsencrypt/live/chatskhu.duckdns.org/keystore.p12
-    key-store-password: ${KEY_STORE_PASSWORD}
-    key-store-type: pkcs12
-    key-alias: tomcat
-    enabled: true
