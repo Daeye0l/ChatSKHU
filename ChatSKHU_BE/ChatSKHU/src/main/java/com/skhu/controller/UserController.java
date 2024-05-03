@@ -1,6 +1,5 @@
 package com.skhu.controller;
 
-import com.skhu.common.CurrentUser;
 import com.skhu.common.UserLevelCheck;
 import com.skhu.dto.UserDto;
 import com.skhu.service.UserService;
@@ -31,16 +30,16 @@ public class UserController {
     )
     @PostMapping("/signup")
     public ResponseEntity<UserDto.UserResponse> signUp(@Valid @RequestBody UserDto.SignUpRequest request, Principal principal){
-        return ResponseEntity.ok(userService.signup(request, principal));
+        return ResponseEntity.ok(userService.signup(request, principal.getName()));
     }
 
-    @PostMapping("/nickname")
+    @PostMapping("/update")
     @Operation(
             summary = "회원 정보 수정",
             description = "회원 정보 수정하는 API"
     )
-    public ResponseEntity<UserDto.UserResponse> updateUserInfo(@RequestBody String nickname, Principal principal){
-        return ResponseEntity.ok(userService.updateNickname(nickname, principal));
+    public ResponseEntity<UserDto.UserResponse> updateUserInfo(@RequestBody UserDto.UpdateRequest request, Principal principal){
+        return ResponseEntity.ok(userService.updateUserInfo(request, principal.getName()));
     }
 
 
@@ -50,7 +49,7 @@ public class UserController {
             summary = "마이페이지",
             description = "회원 정보 조회하는 API"
     )
-    public ResponseEntity<UserDto.UserResponse> myPage(@CurrentUser String email) {
-        return ResponseEntity.ok(userService.findByEmail(email));
+    public ResponseEntity<UserDto.UserResponse> myPage(Principal principal) {
+        return ResponseEntity.ok(userService.findByEmail(principal.getName()));
     }
 }

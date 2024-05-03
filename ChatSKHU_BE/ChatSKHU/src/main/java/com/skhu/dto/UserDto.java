@@ -24,6 +24,19 @@ public class UserDto {
         }
     }
     @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateRequest{
+        private String nickname;
+        private int studentNo;
+
+        @Builder
+        public UpdateRequest(String nickname, int studentNo){
+            this.nickname = nickname;
+            this.studentNo = studentNo;
+        }
+    }
+
+    @Getter
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
