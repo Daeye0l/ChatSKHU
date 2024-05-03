@@ -5,6 +5,7 @@ import com.skhu.common.UserLevelCheck;
 import com.skhu.dto.UserDto;
 import com.skhu.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@Tag(name = "UserController", description = "유저 정보 관련 API")
 public class UserController {
 
     private final UserService userService;
@@ -33,6 +35,10 @@ public class UserController {
     }
 
     @PostMapping("/nickname")
+    @Operation(
+            summary = "회원 정보 수정",
+            description = "회원 정보 수정하는 API"
+    )
     public ResponseEntity<UserDto.UserResponse> updateUserInfo(@RequestBody String nickname, Principal principal){
         return ResponseEntity.ok(userService.updateNickname(nickname, principal));
     }
@@ -40,6 +46,10 @@ public class UserController {
 
     @GetMapping
     @UserLevelCheck
+    @Operation(
+            summary = "마이페이지",
+            description = "회원 정보 조회하는 API"
+    )
     public ResponseEntity<UserDto.UserResponse> myPage(@CurrentUser String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
