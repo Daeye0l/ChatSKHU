@@ -48,8 +48,8 @@ public class AdminService {
                         .id(user.getId())
                         .email(user.getEmail())
                         .nickname(user.getNickname())
-                        .userLevel(user.getUserLevel().toString())
-                        .socialTypes(user.getSocialTypes())
+                        .userLevel(user.getUserLevel())
+                        .socialType(user.getSocialType())
                         .build());
     }
 

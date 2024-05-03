@@ -3,7 +3,6 @@ package com.skhu.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.skhu.domain.User;
-import com.skhu.domain.UserBase;
 import com.skhu.domain.UserLevel;
 import com.skhu.dto.OAuthDto;
 import com.skhu.dto.UserDto;
@@ -21,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.skhu.error.ErrorCode.FAILED_TO_KAKAO_LOGIN;
 import static org.springframework.http.HttpMethod.POST;
@@ -141,30 +141,25 @@ public class KakaoOAuthService implements OAuthService {
 
         return parseUserInfo(responseEntity);
     }
-//    OAuthDto.LoginResponse token = kakaoOAuthService.getAccessToken(code);
-//    OAuthDto.UserResponse userInfo = kakaoOAuthService.getUserInfo(token.getAccessToken());
-//        if(userRepository.findByEmail(userInfo.getEmail()).isEmpty()){
-//        userRepository.save(User.builder()
-//                .email(userInfo.getEmail())
-//                .build());
-//    }
 
     public void saveUserInfo(String accessToken) {
         OAuthDto.UserResponse userInfo = getUserInfo(accessToken);
         userRepository.save(User.builder()
+                .socialId(userInfo.getSocialUid())
+                .socialType(userInfo.getSocialType())
                 .email(userInfo.getEmail())
                 .imageUrl(userInfo.getImageUrl())
                 .build());
     }
 
     public UserDto.LoginResponse login(String accessToken) {
-        if (userRepository.findByEmail(getUserInfo(accessToken).getEmail()).isEmpty()) {
+        Optional<User> user = userRepository.findByEmail(getUserInfo(accessToken).getEmail());
+        if (user.isEmpty()) {
             saveUserInfo(accessToken);
         }
         OAuthDto.UserResponse userInfo = getUserInfo(accessToken);
         String email = userInfo.getEmail();
-        UserLevel userLevel = userInfo.getUserLevel();
-        UserDto.LoginResponse token = tokenProvider.createToken(email, userLevel);
-        return token;
+        UserLevel userLevel = userRepository.findByEmail(email).orElseThrow().getUserLevel();
+        return tokenProvider.createToken(email, userLevel);
     }
 }
