@@ -1,5 +1,6 @@
 package com.skhu.dto;
 
+import com.skhu.domain.User;
 import com.skhu.domain.UserLevel;
 import com.skhu.service.EncryptionService;
 import jakarta.validation.constraints.Email;
@@ -13,28 +14,15 @@ public class UserDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class SignUpRequest{
         @NotBlank
-        @Email
-        private String email;
-
-        @NotBlank
-        @Size(min = 8)
-        private String password;
-
-        @NotBlank
         private String nickname;
+        private int studentNo;
 
         @Builder
-        public SignUpRequest(String email, String password, String nickname){
-            this.email = email;
-            this.password = password;
+        public SignUpRequest(String nickname, int studentNo){
             this.nickname = nickname;
-        }
-
-        public void passwordEncryption(EncryptionService encryptionService){
-            this.password = encryptionService.encrypt(password);
+            this.studentNo = studentNo;
         }
     }
-
     @Getter
     @Builder
     @AllArgsConstructor
@@ -68,10 +56,28 @@ public class UserDto {
 
         private String nickname;
 
-        private String userLevel;
+        private UserLevel userLevel;
 
-        private String[] socialTypes;
+        private String socialType;
+        
+        private int studentNo;
 
+        public UserResponse(String email, UserLevel userLevel, String nickname, String socialType) {
+        }
+
+        public UserResponse(String email, UserLevel userLevel, String nickname, String socialType, int studentNo) {
+        }
+
+        public static UserResponse of(User user){
+            return UserResponse.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .userLevel(user.getUserLevel())
+                    .nickname(user.getNickname())
+                    .socialType(user.getSocialType())
+                    .studentNo(user.getStudentNo())
+                    .build();
+        }
     }
 
     @Getter

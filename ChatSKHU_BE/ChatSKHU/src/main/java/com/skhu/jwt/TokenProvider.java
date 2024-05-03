@@ -12,15 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -30,7 +30,8 @@ public class TokenProvider {
     private final long accessTokenValidityTime;
     private final long refreshTokenValidityTime;
 
-    public TokenProvider(@Value("${jwt.secret}") String key) {
+    public TokenProvider(
+            @Value("${jwt.secret}") String key) {
         byte[] keyBytes = Decoders.BASE64.decode(key);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenValidityTime = 1000 * 60 * 60 * 12;
@@ -43,7 +44,7 @@ public class TokenProvider {
 
         String accessToken = Jwts.builder()
                 .setSubject(email)
-                .claim("userlever",userLevel)
+                .claim("userLevel", userLevel.toString())
                 .setExpiration(tokenExpiredTime)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -108,12 +109,17 @@ public class TokenProvider {
         } catch (Exception e) {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
+        if (claims.get("userLevel") == null) {
+            throw new IllegalArgumentException("권한 정보가 없는 토큰입니다."+claims.get("userLevel")+accessToken+"/n"+claims.getSubject());
+        }
 
-        String email = claims.getSubject();
-        UserLevel userLevel = UserLevel.valueOf((String) claims.get("userLevel"));
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userLevel.name()));
-        UserDetails principal = new User(email, "", authorities);
 
+
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get("userLevel").toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+        UserDetails principal = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
     }
 

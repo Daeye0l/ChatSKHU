@@ -1,46 +1,54 @@
 package com.skhu.domain;
 
-import com.skhu.oauth2.SocialConnection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import static com.skhu.domain.UserLevel.UNAUTH;
-import static jakarta.persistence.CascadeType.ALL;
+import static com.skhu.domain.UserLevel.USER;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User extends UserBase{
+public class User extends BaseTimeEntity {
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "USER_ID")
+    private Long id;
+
+    @Column(unique = true)
+    protected String email;
+
+    @Enumerated(EnumType.STRING)
+    protected UserLevel userLevel;
+
     private String nickname;
+
     private String imageUrl;
 
-    @OneToMany(mappedBy = "user", cascade = ALL, orphanRemoval = true)
-    private Set<SocialConnection> socialConnections = new HashSet<>();
+    private int studentNo;
+
+    private String socialType;
+
+    private String socialId;
 
     @Builder
-    public User(String email, String password, String nickname, String imageUrl){
+    public User(String email, String nickname, String imageUrl, int studentNo, String socialId, String socialType) {
         this.email = email;
-        this.password = password;
         this.nickname = nickname;
         this.imageUrl = imageUrl;
+        this.studentNo = studentNo;
+        this.socialId = socialId;
+        this.socialType = socialType;
         this.userLevel = UNAUTH;
-
     }
 
-    public void addSocialConnection(SocialConnection socialConnection) {
-        this.socialConnections.add(socialConnection);
-    }
+    public void certify() {
+        if (this.userLevel == UNAUTH) {
+            this.userLevel = USER;
+        }
 
-    public String[] getSocialTypes() {
-        return socialConnections.stream()
-                .map(SocialConnection::getSocialType)
-                .map(Enum::name)
-                .toArray(String[]::new);
-    }
 
+    }
 }
