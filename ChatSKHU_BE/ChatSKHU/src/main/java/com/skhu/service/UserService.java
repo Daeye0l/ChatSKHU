@@ -27,12 +27,11 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto.UserResponse signup(UserDto.SignUpRequest request, Principal principal) {
+    public UserDto.UserResponse signup(UserDto.SignUpRequest request, String email) {
 
         if (checkNicknameDuplicate(request.getNickname())) {
             throw new CustomException(DUPLICATE_USER_NICKNAME);
         }
-        String email = principal.getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow();
         user.setNickname(request.getNickname());
@@ -50,11 +49,13 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto.UserResponse updateNickname(String nickname, Principal principal){
-        String email = principal.getName();
+    public UserDto.UserResponse updateUserInfo(UserDto.UpdateRequest request, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow();
-        user.setNickname(nickname);
+        if (request.getNickname() != null)
+            user.setNickname(request.getNickname());
+        if (request.getStudentNo() != 0)
+            user.setStudentNo(request.getStudentNo());
         return UserDto.UserResponse.of(user);
     }
 
