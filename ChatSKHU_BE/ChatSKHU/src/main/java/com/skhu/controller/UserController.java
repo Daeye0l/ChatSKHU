@@ -32,7 +32,11 @@ public class UserController {
         return ResponseEntity.ok(userService.signup(request, principal));
     }
 
- 
+    @PostMapping("/nickname")
+    public ResponseEntity<UserDto.UserResponse> updateUserInfo(@RequestBody String nickname, Principal principal){
+        return ResponseEntity.ok(userService.updateNickname(nickname, principal));
+    }
+
 
     @GetMapping
     @UserLevelCheck
