@@ -49,6 +49,14 @@ public class UserService {
         return UserDto.UserResponse.of(user);
     }
 
+    @Transactional
+    public UserDto.UserResponse updateNickname(String nickname, Principal principal){
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow();
+        user.setNickname(nickname);
+        return UserDto.UserResponse.of(user);
+    }
 
 
 }
