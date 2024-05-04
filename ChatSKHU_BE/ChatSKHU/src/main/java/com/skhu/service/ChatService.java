@@ -1,5 +1,7 @@
 package com.skhu.service;
 
+import com.skhu.dto.FlaskRequest;
+import com.skhu.dto.FlaskResponse;
 import com.skhu.dto.GPTRequest;
 import com.skhu.dto.GPTResponse;
 import com.skhu.domain.Chat;
@@ -7,9 +9,13 @@ import com.skhu.repository.ChatRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 @Service
 @RequiredArgsConstructor
@@ -20,22 +26,37 @@ public class ChatService {
 	@Value("${openai.model}")
 	private String model;
 	
+	@Value("${openai.gpt-api-key}")
+	private String apiKey;
+	
 	@Transactional
-	public String chat(String prompt) {
-		GPTRequest request = new GPTRequest(model, prompt, 1, 256);
-		GPTResponse response = restTemplate.postForObject("https://api.openai.com/v1/chat/completions", request,
-				GPTResponse.class);
-		String answer = response.getChoices().get(0).getMessage().getContent();
-		return answer;
+	public GPTResponse chat(FlaskResponse flaskResponse) {
+		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt());
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + apiKey);
+		HttpEntity<GPTRequest> entity = new HttpEntity<>(gptRequest, headers);
+		GPTResponse gptResponse = restTemplate.postForObject("https://api.openai.com/v1/chat/completions", entity, GPTResponse.class);
+		return gptResponse;
 	}
 	
 	@Transactional
-	public void save(String prompt) {
-		String answer = chat(prompt);
-
+	public void save(String question) {
+		FlaskResponse flaskResponse = getPrompt(question);
+		GPTResponse gptResponse = chat(flaskResponse);
+		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
 		chatRepository.save(Chat.builder()
-				.question(prompt)
+				.question(question)
 				.answer(answer)
 				.build());
+	}
+	
+	@Transactional
+	public FlaskResponse getPrompt(String question) {
+		FlaskRequest flaskRequest = new FlaskRequest(question);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<FlaskRequest> entity = new HttpEntity<>(flaskRequest, headers);
+		FlaskResponse flaskResponse = restTemplate.postForObject("http://localhost:8085/prompt", entity, FlaskResponse.class);
+		return flaskResponse;
 	}
 }
