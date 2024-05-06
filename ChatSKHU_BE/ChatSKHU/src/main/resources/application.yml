@@ -1,11 +1,11 @@
-server:
-  port: 8443
-  ssl:
-    key-store: /etc/letsencrypt/live/chatskhu.duckdns.org/keystore.p12
-    key-store-password: ${KEY_STORE_PASSWORD}
-    key-store-type: pkcs12
-    key-alias: tomcat
-    enabled: true
+#server:
+#  port: 8443
+#  ssl:
+#    key-store: /etc/letsencrypt/live/chatskhu.duckdns.org/keystore.p12
+#    key-store-password: ${KEY_STORE_PASSWORD}
+#    key-store-type: pkcs12
+#    key-alias: tomcat
+#    enabled: true
 
 spring:
   profiles:
@@ -67,7 +67,7 @@ spring:
     show-sql: true
     
 openai: # local 프로파일에 openai설정 추가
-  model: gpt-4
+  model: gpt-3.5-turbo
   gpt-api-key: ${OPENAI_API_KEY}
 
 ---
