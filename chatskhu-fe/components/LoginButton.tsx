@@ -2,9 +2,14 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 const LoginButton = () => {
-   
+    const kakao = process.env.NEXT_PUBLIC_KAKA0_AUTH_URL!;
+
     return (
-        <KaKaoButtonStyled onClick={() => {console.log(process.env.KAKAO_AUTH_URL)}}>
+        <KaKaoButtonStyled
+            onClick={() => {
+                window.location.href = kakao;
+            }}
+        >
             <Image src="/images/chat.png" alt="chat_image" width={24} height={24} />
             카카오로 3초 만에 시작하기
         </KaKaoButtonStyled>
@@ -25,7 +30,7 @@ const KaKaoButtonStyled = styled.button`
     align-items: center;
 
     font-weight: 500;
-    cursor : pointer;
+    cursor: pointer;
 
     img {
         margin-right: 14px;
