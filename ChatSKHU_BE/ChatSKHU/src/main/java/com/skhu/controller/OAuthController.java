@@ -35,7 +35,7 @@ public class OAuthController {
     @Operation(
             summary = "카카오 토큰으로 로그인",
             description = "첫 로그인 시 카카오 사용자 정보 데이터베이스에 저장")
-    @PostMapping("kakao/login")
+    @GetMapping("kakao/login")
     public ResponseEntity<UserDto.LoginResponse> kakaoLogin(@RequestBody OAuthDto.KakaoLoginRequest request){
         return ResponseEntity.ok(kakaoOAuthService.login(request.getAccessToken()));
     }
@@ -50,7 +50,7 @@ public class OAuthController {
     @Operation(
             summary = "구글 토큰으로 로그인",
             description = "첫 로그인 시 구글 사용자 정보 데이터베이스에 저장")
-    @PostMapping("google/login")
+    @GetMapping("google/login")
     public ResponseEntity<OAuthDto.UserResponse> googleLogin(@RequestParam String accessToken) {
         return ResponseEntity.ok(googleOAuthService.getUserInfo(accessToken));
     }
