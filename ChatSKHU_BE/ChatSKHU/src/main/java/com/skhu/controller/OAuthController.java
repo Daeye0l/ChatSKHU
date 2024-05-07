@@ -36,7 +36,7 @@ public class OAuthController {
             summary = "카카오 토큰으로 로그인",
             description = "첫 로그인 시 카카오 사용자 정보 데이터베이스에 저장")
     @PostMapping("kakao/login")
-    public ResponseEntity<UserDto.LoginResponse> kakaoLogin(@RequestHeader OAuthDto.KakaoLoginRequest request){
+    public ResponseEntity<UserDto.LoginResponse> kakaoLogin(@RequestBody OAuthDto.KakaoLoginRequest request){
         return ResponseEntity.ok(kakaoOAuthService.login(request.getAccessToken()));
     }
 
