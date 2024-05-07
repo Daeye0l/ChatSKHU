@@ -13,14 +13,10 @@ import java.util.List;
 public class GPTRequest {
 	private String model; // 모델 이름
 	private List<Message> messages; // 리스트 형태의 메시지
-	private float temperature; // 답변의 다양성 지정(0~2)
-	private int maxTokens; // 답변의 최대 토큰수
 	
-	public GPTRequest(String model, String prompt, float temperature, int maxTokens) {
+	public GPTRequest(String model, String prompt) {
 		this.model = model;
 		this.messages = new ArrayList<>();
 		this.messages.add(new Message("user", prompt));
-		this.temperature = temperature;
-		this.maxTokens = maxTokens;
 	}
 }
