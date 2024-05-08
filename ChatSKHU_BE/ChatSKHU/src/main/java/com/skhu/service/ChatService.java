@@ -30,20 +30,24 @@ public class ChatService {
 	private String apiKey;
 	
 	@Transactional
-	public GPTResponse chat(FlaskResponse flaskResponse) {
-		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt());
+	public String chat(String question) {
+		FlaskResponse flaskResponse = getPrompt(question);
+		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 256);
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + apiKey);
 		HttpEntity<GPTRequest> entity = new HttpEntity<>(gptRequest, headers);
+		
 		GPTResponse gptResponse = restTemplate.postForObject("https://api.openai.com/v1/chat/completions", entity, GPTResponse.class);
-		return gptResponse;
+		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
+		
+		save(question, answer);
+		
+		return answer;
 	}
 	
 	@Transactional
-	public void save(String question) {
-		FlaskResponse flaskResponse = getPrompt(question);
-		GPTResponse gptResponse = chat(flaskResponse);
-		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
+	public void save(String question, String answer) {
 		chatRepository.save(Chat.builder()
 				.question(question)
 				.answer(answer)

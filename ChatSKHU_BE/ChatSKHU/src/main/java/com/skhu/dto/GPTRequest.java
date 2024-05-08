@@ -13,10 +13,12 @@ import java.util.List;
 public class GPTRequest {
 	private String model; // 모델 이름
 	private List<Message> messages; // 리스트 형태의 메시지
+	private int maxTokens;
 	
-	public GPTRequest(String model, String prompt) {
+	public GPTRequest(String model, String prompt, int maxTokens) {
 		this.model = model;
 		this.messages = new ArrayList<>();
 		this.messages.add(new Message("user", prompt));
+		this.maxTokens = maxTokens;
 	}
 }

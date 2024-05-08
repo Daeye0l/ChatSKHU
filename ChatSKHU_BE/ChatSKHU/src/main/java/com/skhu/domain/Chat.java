@@ -14,7 +14,7 @@ import lombok.*;
 @Getter
 @Table(name = "chat")
 @NoArgsConstructor
-public class Chat {
+public class Chat extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "chat_id")
