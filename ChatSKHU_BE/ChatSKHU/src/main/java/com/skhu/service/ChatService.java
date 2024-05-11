@@ -86,5 +86,37 @@ public class ChatService {
                 .build();
     }
 
+    @Transactional
+    public ChatRoomsResponseDto getChatRooms(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow();
+
+        LocalDateTime now = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        List<ChatRoom> today = chatRoomRepository.findChatRoomByUserAndModifiedDate(user, now, now.plusDays(1));
+        List<ChatRoom> yesterday = chatRoomRepository.findChatRoomByUserAndModifiedDate(user, now.minusDays(1), now);
+        List<ChatRoom> week = chatRoomRepository.findChatRoomByUserAndModifiedDate(user, now.minusDays(7), now.minusDays(1));
+        List<ChatRoom> month = chatRoomRepository.findChatRoomByUserAndModifiedDate(user, now.minusDays(30), now.minusDays(7));
+
+        return ChatRoomsResponseDto.builder()
+                .today(convertToDtoList(today))
+                .yesterday(convertToDtoList(yesterday))
+                .week(convertToDtoList(week))
+                .month(convertToDtoList(month))
+                .build();
+    }
+
+    public List<ChatRoomResponseDto> convertToDtoList(List<ChatRoom> chatRooms) {
+        return chatRooms.stream()
+                .map(chatRoom -> {
+                    return ChatRoomResponseDto.builder()
+                            .id(chatRoom.getId())
+                            .title(chatRoom.getTitle())
+                            .userId(chatRoom.getUser().getId())
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    
 
 }

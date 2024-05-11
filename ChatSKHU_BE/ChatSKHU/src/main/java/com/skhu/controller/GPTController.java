@@ -39,6 +39,14 @@ public class GPTController {
 		return chatService.createChatRoom(title, principal.getName());
 	}
 
+	@Operation(
+			summary = "날짜별 ChatRoom 조회",
+			description = "첫 로그인 시 카카오 사용자 정보 데이터베이스에 저장")
+	@GetMapping("/chatroom")
+	public ChatRoomsResponseDto getChatRooms(Principal principal){
+		return chatService.getChatRooms(principal.getName());
+	}
+
 	/*
 	@Operation(summary = "DB 저장", description = "질문과 답변 DB에 저장")
 	@PostMapping("/save")
