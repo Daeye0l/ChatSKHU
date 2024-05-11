@@ -41,12 +41,19 @@ public class GPTController {
 
 	@Operation(
 			summary = "날짜별 ChatRoom 조회",
-			description = "첫 로그인 시 카카오 사용자 정보 데이터베이스에 저장")
+			description = "오늘, 어제, 근 일주일, 근 한달 그룹으로 ChatRoom 조회하는 API")
 	@GetMapping("/chatroom")
 	public ChatRoomsResponseDto getChatRooms(Principal principal){
 		return chatService.getChatRooms(principal.getName());
 	}
 
+	@Operation(
+			summary = "ChatRoom Title 수정",
+			description = "ChatRoom Title 수정하는 API")
+	@PostMapping("title")
+	public ChatRoomResponseDto updateChatRoomTitle(String title, Long chatRoomId){
+		return chatService.updateChatRoomTitle(title, chatRoomId);
+	}
 	/*
 	@Operation(summary = "DB 저장", description = "질문과 답변 DB에 저장")
 	@PostMapping("/save")
