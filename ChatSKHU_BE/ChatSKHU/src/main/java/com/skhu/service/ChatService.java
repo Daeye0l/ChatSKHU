@@ -117,6 +117,18 @@ public class ChatService {
                 .collect(Collectors.toList());
     }
 
-    
+
+    @Transactional
+    public ChatRoomResponseDto updateChatRoomTitle(String title, Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow();
+        chatRoom.setTitle(title);
+        return ChatRoomResponseDto
+                .builder()
+                .title(chatRoom.getTitle())
+                .userId(chatRoom.getUser().getId())
+                .id(chatRoom.getId())
+                .build();
+    }
 
 }
