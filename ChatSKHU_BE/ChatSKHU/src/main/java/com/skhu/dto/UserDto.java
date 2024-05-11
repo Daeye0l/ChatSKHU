@@ -40,18 +40,6 @@ public class UserDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class LoginRequest{
-        private String email;
-        private String password;
-
-        public void passwordEncryption(EncryptionService encryptionService){
-            this.password = encryptionService.encrypt(password);
-        }
-    }
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class LoginResponse {
         private String accessToken;
         private String refreshToken;
