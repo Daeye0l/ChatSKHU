@@ -2,6 +2,9 @@ package com.skhu.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
+
 import static com.skhu.domain.UserLevel.UNAUTH;
 import static com.skhu.domain.UserLevel.USER;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -32,6 +35,9 @@ public class User extends BaseTimeEntity {
     private String socialType;
 
     private String socialId;
+
+    @OneToMany(mappedBy = "user")
+    private List<ChatRoom> chatRooms;
 
     @Builder
     public User(String email, String nickname, String imageUrl, int studentNo, String socialId, String socialType) {

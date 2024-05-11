@@ -29,7 +29,7 @@ public class Chat extends BaseTimeEntity {
 	
 	@Column
 	private String answer;
-	
+
 	@Builder
 	public Chat(String question, String answer) {
 		this.question = question;
