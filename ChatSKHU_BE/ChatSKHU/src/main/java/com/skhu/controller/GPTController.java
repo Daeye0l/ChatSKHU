@@ -31,7 +31,7 @@ public class GPTController {
 	@Operation(summary = "OpenAI API 호출", description = "GPT 답변 확인")
 	@GetMapping("/chat")
 	public String chat(@RequestParam("question") String question, Principal principal) {
-		return chatService.chat(question, principal);
+		return chatService.chat(question, principal.getName());
 	}
 
 	@Operation(

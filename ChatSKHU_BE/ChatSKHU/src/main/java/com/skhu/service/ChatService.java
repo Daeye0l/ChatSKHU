@@ -43,8 +43,8 @@ public class ChatService {
 	private String apiKey;
 	
 	@Transactional
-	public String chat(String question, Principal principal) {
-		User user = userRepository.findByEmail(principal.getName()).orElseThrow();
+	public String chat(String question, String email) {
+		User user = userRepository.findByEmail(email).orElseThrow();
 		FlaskResponse flaskResponse = getPrompt(question);
 		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 256);
 		
