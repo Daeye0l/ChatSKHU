@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FlaskResponse {
-	private String prompt;
+public class ChatResponse {
+	private  String answer;
 }

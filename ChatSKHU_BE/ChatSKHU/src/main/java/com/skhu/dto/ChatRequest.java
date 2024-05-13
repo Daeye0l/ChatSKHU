@@ -1,12 +1,12 @@
 package com.skhu.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FlaskResponse {
-	private String prompt;
+public class ChatRequest {
+	private String question;
 }

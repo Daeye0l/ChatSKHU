@@ -1,5 +1,7 @@
 package com.skhu.service;
 
+import com.skhu.dto.ChatRequest;
+import com.skhu.dto.ChatResponse;
 import com.skhu.dto.ChatRoomResponseDto;
 import com.skhu.dto.ChatRoomsResponseDto;
 import com.skhu.dto.FlaskRequest;
@@ -16,7 +18,6 @@ import com.skhu.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,9 +44,9 @@ public class ChatService {
 	private String apiKey;
 	
 	@Transactional
-	public String chat(String question, String email) {
+	public ChatResponse chat(ChatRequest chatRequest, String email) {
 		User user = userRepository.findByEmail(email).orElseThrow();
-		FlaskResponse flaskResponse = getPrompt(question);
+		FlaskResponse flaskResponse = getPrompt(chatRequest.getQuestion());
 		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 256);
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -54,10 +55,12 @@ public class ChatService {
 		
 		GPTResponse gptResponse = restTemplate.postForObject("https://api.openai.com/v1/chat/completions", entity, GPTResponse.class);
 		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
+		ChatResponse chatResponse = new ChatResponse();
+		chatResponse.setAnswer(answer);
 		
-		save(question, answer, user);
+		save(chatRequest.getQuestion(), answer, user);
 		
-		return answer;
+		return chatResponse;
 	}
 	
 	@Transactional

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,9 +30,9 @@ public class ChatController {
 	private final ChatService chatService;
 	
 	@Operation(summary = "OpenAI API 호출", description = "GPT 답변 확인")
-	@GetMapping("/chat")
-	public String chat(@RequestParam("question") String question, Principal principal) {
-		return chatService.chat(question, principal.getName());
+	@PostMapping("/chat")
+	public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest chatRequest, Principal principal) {
+		return ResponseEntity.ok(chatService.chat(chatRequest, principal.getName()));
 	}
 
 	@Operation(
