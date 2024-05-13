@@ -128,7 +128,7 @@ public class ChatService {
                 .title(chatRoom.getTitle())
                 .userId(chatRoom.getUser().getId())
                 .id(chatRoom.getId())
-                .build();
+                .build(); 
     }
 
 }
