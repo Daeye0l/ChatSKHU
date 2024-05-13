@@ -1,8 +1,8 @@
 package com.skhu.common;
 
-import com.skhu.domain.User;
+import com.skhu.oauth.domain.User;
 import com.skhu.error.CustomException;
-import com.skhu.repository.UserRepository;
+import com.skhu.oauth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
