@@ -22,7 +22,7 @@ import java.security.Principal;
 @RequestMapping("/gpt")
 @RequiredArgsConstructor
 @Tag(name = "GPTController", description = "GPT 답변 생성 관련 API")
-public class GPTController {
+public class ChatController {
 	@Value("${openai.model}")
 	private String model;
 	
