@@ -31,8 +31,9 @@ public class Chat extends BaseTimeEntity {
 	private String answer;
 
 	@Builder
-	public Chat(String question, String answer) {
+	public Chat(String question, String answer, User user) {
 		this.question = question;
 		this.answer = answer;
+		this.user = user;
 	}
 }

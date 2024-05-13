@@ -3,6 +3,9 @@ package com.skhu.controller;
 import com.skhu.dto.*;
 import com.skhu.service.ChatService;
 import lombok.RequiredArgsConstructor;
+
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +30,8 @@ public class GPTController {
 	
 	@Operation(summary = "OpenAI API 호출", description = "GPT 답변 확인")
 	@GetMapping("/chat")
-	public String chat(@RequestParam("question") String question) {
-		return chatService.chat(question);
+	public String chat(@RequestParam("question") String question, Principal principal) {
+		return chatService.chat(question, principal);
 	}
 
 	@Operation(

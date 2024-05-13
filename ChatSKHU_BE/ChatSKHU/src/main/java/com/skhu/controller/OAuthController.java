@@ -25,7 +25,7 @@ public class OAuthController {
             summary = "카카오 토큰 발급",
             description = "카카오 로그인 후 redirect URL로 쓰는 API" +
                     "카카오 로그인 버튼에 들어갈 URL https://kauth.kakao.com/oauth/authorize?client_id=6d70836eca9601d56fe3b7b7d3628840&redirect_uri=http://chatskhu.duckdns.org/oauth/kakao/callback&response_type=code")
-    public ResponseEntity<OAuthDto.LoginResponse> kakaoCallback(@RequestParam String code) {
+    public ResponseEntity<OAuthDto.LoginResponse> kakaoCallback(@RequestParam("code") String code) {
         return ResponseEntity.ok(kakaoOAuthService.getAccessToken(code));
     }
 
