@@ -1,10 +1,9 @@
 package com.skhu.config;
 
 import com.skhu.error.CustomAuthenticationEntryPoint;
-import com.skhu.jwt.JwtFilter;
-import com.skhu.jwt.TokenProvider;
+import com.skhu.oauth.jwt.JwtFilter;
+import com.skhu.oauth.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
