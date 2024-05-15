@@ -1,15 +1,20 @@
 package com.skhu.chat.service;
 
 import com.skhu.chat.dto.*;
+import com.skhu.chat.dto.ChatDto.ChatSearchResponse;
 import com.skhu.chat.domain.Chat;
 import com.skhu.chat.domain.ChatRoom;
 import com.skhu.oauth.domain.User;
+import com.skhu.oauth.dto.UserDto;
 import com.skhu.chat.repository.ChatRepository;
 import com.skhu.chat.repository.ChatRoomRepository;
+import com.skhu.error.CustomException;
 import com.skhu.oauth.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import static com.skhu.error.ErrorCode.NOT_FOUND_USER;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -74,6 +79,20 @@ public class ChatService {
 		FlaskResponse flaskResponse = restTemplate.postForObject("http://localhost:8085/prompt", entity, FlaskResponse.class);
 		return flaskResponse;
 	}
+	
+	@Transactional
+    public List<ChatDto.ChatSearchResponse> findByUserIdOrderByCreatedDateDesc(String email) {
+		User user = userRepository.findByEmail(email).orElseThrow();
+        List<Chat> chats = chatRepository.findByUserIdOrderByCreatedDateDesc(user.getId());
+        
+        return chats.stream().map(chat -> {
+        	ChatSearchResponse chatSearchResponse = new ChatSearchResponse();
+        	chatSearchResponse.setQuestion(chat.getQuestion());
+        	chatSearchResponse.setAnswer(chat.getAnswer());
+        	chatSearchResponse.setCreatedDate(chat.getCreatedDate());
+        	return chatSearchResponse;
+        }).collect(Collectors.toList());
+    }
 	
 	@Transactional
     public ChatDto.ChatRoomResponse createChatRoom(ChatDto.ChatRoomRequest request, String email) {

@@ -2,6 +2,7 @@ package com.skhu.chat.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ChatDto {
@@ -18,6 +19,15 @@ public class ChatDto {
     @NoArgsConstructor
     public static class ChatResponse {
         private  String answer;
+    }
+    
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ChatSearchResponse {
+        private String question;
+        private String answer;
+        private LocalDateTime createdDate;
     }
 
     @Data

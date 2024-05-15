@@ -5,6 +5,7 @@ import com.skhu.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,13 @@ public class ChatController {
 	public ResponseEntity<ChatDto.ChatResponse> chat(@RequestBody ChatDto.ChatRequest chatRequest, Principal principal) {
 		return ResponseEntity.ok(chatService.chat(chatRequest, principal.getName()));
 	}
-
+	
+	@Operation(summary = "ChatList 확인", description = "UserId에 따른 CreatedDate 최신순 Chat 목록 조회")
+	@GetMapping("/chat")
+	public ResponseEntity<List<ChatDto.ChatSearchResponse>> chatList(Principal principal) {
+		return ResponseEntity.ok(chatService.findByUserIdOrderByCreatedDateDesc(principal.getName()));
+	}
+	
 	@Operation(
 			summary = "ChatRoom 생성",
 			description = "ChatRoom 생성하는 API")
