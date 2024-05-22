@@ -60,8 +60,8 @@ public class ChatController {
 	@Operation(
 			summary = "ChatRoom Title 수정",
 			description = "ChatRoom Title 수정하는 API")
-	@PostMapping("title/{chatRoomId}")
-	public ResponseEntity<ChatDto.ChatRoomResponse> updateChatRoomTitle(@PathVariable Long chatRoomId, ChatDto.ChatRoomUpdateRequest request){
+	@PutMapping("chatroom/{chatRoomId}")
+	public ResponseEntity<ChatDto.ChatRoomResponse> updateChatRoomTitle(@PathVariable Long chatRoomId, @RequestBody ChatDto.ChatRoomUpdateRequest request){
 		return ResponseEntity.ok(chatService.updateChatRoomTitle(request, chatRoomId));
 	}
 	/*
