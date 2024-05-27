@@ -5,17 +5,14 @@ import com.skhu.chat.dto.ChatDto.ChatSearchResponse;
 import com.skhu.chat.domain.Chat;
 import com.skhu.chat.domain.ChatRoom;
 import com.skhu.oauth.domain.User;
-import com.skhu.oauth.dto.UserDto;
 import com.skhu.chat.repository.ChatRepository;
 import com.skhu.chat.repository.ChatRoomRepository;
-import com.skhu.error.CustomException;
 import com.skhu.oauth.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import static com.skhu.error.ErrorCode.NOT_FOUND_USER;
-
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import reactor.core.publisher.Flux;
 
 @Service
 @RequiredArgsConstructor
@@ -41,26 +39,48 @@ public class ChatService {
 	@Value("${openai.gpt-api-key}")
 	private String apiKey;
 	
+//	@Transactional
+//	public ChatDto.ChatResponse chat(ChatDto.ChatRequest chatRequest, String email) {
+//		User user = userRepository.findByEmail(email).orElseThrow();
+//		FlaskResponse flaskResponse = getPrompt(chatRequest.getQuestion());
+//		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 256);
+//
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.set("Authorization", "Bearer " + apiKey);
+//		HttpEntity<GPTRequest> entity = new HttpEntity<>(gptRequest, headers);
+//
+//		GPTResponse gptResponse = restTemplate.postForObject("https://api.openai.com/v1/chat/completions", entity, GPTResponse.class);
+//		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
+//		ChatDto.ChatResponse chatResponse = new ChatDto.ChatResponse();
+//		chatResponse.setAnswer(answer);
+//
+//		save(chatRequest.getQuestion(), answer, user);
+//
+//		return chatResponse;
+//	}
 	@Transactional
-	public ChatDto.ChatResponse chat(ChatDto.ChatRequest chatRequest, String email) {
+	public Flux<Object> chat(ChatDto.ChatRequest chatRequest, String email) {
+		return Flux.create(sink -> {
 		User user = userRepository.findByEmail(email).orElseThrow();
 		FlaskResponse flaskResponse = getPrompt(chatRequest.getQuestion());
 		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 256);
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + apiKey);
 		HttpEntity<GPTRequest> entity = new HttpEntity<>(gptRequest, headers);
-		
+
 		GPTResponse gptResponse = restTemplate.postForObject("https://api.openai.com/v1/chat/completions", entity, GPTResponse.class);
 		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
-		ChatDto.ChatResponse chatResponse = new ChatDto.ChatResponse();
-		chatResponse.setAnswer(answer);
-		
+
+		for (char c : answer.toCharArray()) {
+			sink.next(String.valueOf(c));
+		}
+		sink.complete();
+
 		save(chatRequest.getQuestion(), answer, user);
-		
-		return chatResponse;
+		}).delayElements(Duration.ofMillis(100));
 	}
-	
+
 	@Transactional
 	public void save(String question, String answer, User user) {
 		chatRepository.save(Chat.builder()
@@ -76,8 +96,7 @@ public class ChatService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<FlaskRequest> entity = new HttpEntity<>(flaskRequest, headers);
-		FlaskResponse flaskResponse = restTemplate.postForObject("http://localhost:8085/prompt", entity, FlaskResponse.class);
-		return flaskResponse;
+		return restTemplate.postForObject("http://localhost:8085/prompt", entity, FlaskResponse.class);
 	}
 	
 	@Transactional
