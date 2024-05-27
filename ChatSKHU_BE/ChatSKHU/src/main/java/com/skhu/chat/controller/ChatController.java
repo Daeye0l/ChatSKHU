@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import reactor.core.publisher.Flux;
 
 
 @RestController
@@ -27,8 +28,8 @@ public class ChatController {
 	
 	@Operation(summary = "OpenAI API 호출", description = "GPT 답변 확인")
 	@PostMapping("/chat")
-	public ResponseEntity<ChatDto.ChatResponse> chat(@RequestBody ChatDto.ChatRequest chatRequest, Principal principal) {
-		return ResponseEntity.ok(chatService.chat(chatRequest, principal.getName()));
+	public Flux<Object> chat(@RequestBody ChatDto.ChatRequest chatRequest, Principal principal) {
+		return chatService.chat(chatRequest, principal.getName());
 	}
 	
 	@Operation(summary = "ChatList 확인", description = "UserId에 따른 CreatedDate 최신순 Chat 목록 조회")
@@ -56,8 +57,8 @@ public class ChatController {
 	@Operation(
 			summary = "ChatRoom Title 수정",
 			description = "ChatRoom Title 수정하는 API")
-	@PostMapping("title/{chatRoomId}")
-	public ResponseEntity<ChatDto.ChatRoomResponse> updateChatRoomTitle(@PathVariable Long chatRoomId, ChatDto.ChatRoomUpdateRequest request){
+	@PutMapping("chatroom/{chatRoomId}")
+	public ResponseEntity<ChatDto.ChatRoomResponse> updateChatRoomTitle(@PathVariable Long chatRoomId, @RequestBody ChatDto.ChatRoomUpdateRequest request){
 		return ResponseEntity.ok(chatService.updateChatRoomTitle(request, chatRoomId));
 	}
 	/*
