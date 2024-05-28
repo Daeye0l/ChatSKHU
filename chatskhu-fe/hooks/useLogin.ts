@@ -8,7 +8,7 @@ interface LoginToken {
 }
 
 const useKaKaoToken = () => {
-    const [token, setToken] = useState();
+    const [token, setToken] = useState<LoginToken>();
     const router = useRouter();
 
     const handleKaKaoLogin = useCallback(async () => {
