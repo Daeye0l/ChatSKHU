@@ -29,7 +29,7 @@ public class Chat extends BaseTimeEntity {
 	@Column
 	private String question;
 	
-	@Column(length = 500)
+	@Column(length = 2000)
 	private String answer;
 
 	@Builder

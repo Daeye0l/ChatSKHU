@@ -32,16 +32,31 @@ public class ReportService {
 	}
 	
 	@Transactional
+	public void reportDelete(Long reportId) {
+		Report report = reportRepository.findById(reportId).orElseThrow();
+		reportRepository.delete(report);
+	}
+	
+	@Transactional
+	public void updateAnswer(Long reportId, ReportDto.ReportAddAnswer reportAddAnswer, String email) {
+		Report report = reportRepository.findById(reportId).orElseThrow();
+		report.setAnswer(reportAddAnswer.getAnswer());
+	}
+	
+	@Transactional
     public List<ReportDto.ReportSearchResponse> findByUserIdOrderByCreatedDateDesc(String email) {
 		User user = userRepository.findByEmail(email).orElseThrow();
         List<Report> reports = reportRepository.findByUserIdOrderByCreatedDateDesc(user.getId());
         
         return reports.stream().map(report -> {
         	ReportSearchResponse reportSearchResponse = new ReportSearchResponse();
+        	reportSearchResponse.setId(report.getId());
         	reportSearchResponse.setTitle(report.getTitle());
         	reportSearchResponse.setContent(report.getContent());
         	reportSearchResponse.setAnswer(report.getAnswer());
         	reportSearchResponse.setCreatedDate(report.getCreatedDate());
+        	reportSearchResponse.setModifiedDate(report.getModifiedDate());
+        	reportSearchResponse.setNickName(user.getNickname());
         	return reportSearchResponse;
         }).collect(Collectors.toList());
     }
