@@ -12,7 +12,6 @@ import com.skhu.oauth.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,28 +38,13 @@ public class ChatService {
 	@Value("${openai.gpt-api-key}")
 	private String apiKey;
 	
-//	@Transactional
-//	public ChatDto.ChatResponse chat(ChatDto.ChatRequest chatRequest, String email) {
-//		User user = userRepository.findByEmail(email).orElseThrow();
-//		FlaskResponse flaskResponse = getPrompt(chatRequest.getQuestion());
-//		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 256);
-//
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.set("Authorization", "Bearer " + apiKey);
-//		HttpEntity<GPTRequest> entity = new HttpEntity<>(gptRequest, headers);
-//
-//		GPTResponse gptResponse = restTemplate.postForObject("https://api.openai.com/v1/chat/completions", entity, GPTResponse.class);
-//		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
-//		ChatDto.ChatResponse chatResponse = new ChatDto.ChatResponse();
-//		chatResponse.setAnswer(answer);
-//
-//		save(chatRequest.getQuestion(), answer, user);
-//
-//		return chatResponse;
-//	}
 	@Transactional
-	public Flux<Object> chat(ChatDto.ChatRequest chatRequest, String email) {
-		return Flux.create(sink -> {
+	public ChatDto.ChatResponse chat(Long chatRoomId, ChatDto.ChatRequest chatRequest, String email) {
+		if(chatRoomId==-1){
+			ChatDto.ChatRoomResponse chatRoom = createChatRoom(email);
+			chatRoomId = chatRoom.getId();
+		}
+
 		User user = userRepository.findByEmail(email).orElseThrow();
 		FlaskResponse flaskResponse = getPrompt(chatRequest.getQuestion());
 		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 256);
@@ -71,25 +55,51 @@ public class ChatService {
 
 		GPTResponse gptResponse = restTemplate.postForObject("https://api.openai.com/v1/chat/completions", entity, GPTResponse.class);
 		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
+		ChatDto.ChatResponse chatResponse = new ChatDto.ChatResponse();
+		chatResponse.setAnswer(answer);
 
-		for (char c : answer.toCharArray()) {
-			sink.next(String.valueOf(c));
-		}
-		sink.complete();
+		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).get();
 
-		save(chatRequest.getQuestion(), answer, user);
-		}).delayElements(Duration.ofMillis(100));
+		save(chatRequest.getQuestion(), answer, user, chatRoom);
+
+		return chatResponse;
 	}
+//	@Transactional
+//	public Flux<Object> chat(ChatDto.ChatRequest chatRequest, String email) {
+//		return Flux.create(sink -> {
+//		User user = userRepository.findByEmail(email).orElseThrow();
+//		FlaskResponse flaskResponse = getPrompt(chatRequest.getQuestion());
+//		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 256);
+//
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.set("Authorization", "Bearer " + apiKey);
+//		HttpEntity<GPTRequest> entity = new HttpEntity<>(gptRequest, headers);
+//
+//		GPTResponse gptResponse = restTemplate.postForObject("https://api.openai.com/v1/chat/completions", entity, GPTResponse.class);
+//		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
+//
+//		for (char c : answer.toCharArray()) {
+//			sink.next(String.valueOf(c));
+//		}
+//		sink.complete();
+//
+//		save(chatRequest.getQuestion(), answer, user);
+//		}).delayElements(Duration.ofMillis(100));
+//	}
 
+//		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).get();
+//
+//		save(chatRequest.getQuestion(), answer, user, chatRoom);
+//		}).delayElements(Duration.ofMillis(100));
 	@Transactional
-	public void save(String question, String answer, User user) {
+	public void save(String question, String answer, User user, ChatRoom chatRoom) {
 		chatRepository.save(Chat.builder()
 				.question(question)
 				.answer(answer)
 				.user(user)
+				.chatRoom(chatRoom)
 				.build());
 	}
-	
 	@Transactional
 	public FlaskResponse getPrompt(String question) {
 		FlaskRequest flaskRequest = new FlaskRequest(question);
@@ -114,16 +124,14 @@ public class ChatService {
     }
 	
 	@Transactional
-    public ChatDto.ChatRoomResponse createChatRoom(ChatDto.ChatRoomRequest request, String email) {
+    public ChatDto.ChatRoomResponse createChatRoom(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow();
 
         ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.builder()
-                .title(request.getTitle())
                 .user(user)
                 .build());
         return ChatDto.ChatRoomResponse.builder()
-                .title(chatRoom.getTitle())
                 .userId(chatRoom.getUser().getId())
                 .id(chatRoom.getId())
                 .build();

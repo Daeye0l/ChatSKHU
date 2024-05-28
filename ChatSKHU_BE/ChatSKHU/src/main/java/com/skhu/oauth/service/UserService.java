@@ -49,12 +49,10 @@ public class UserService {
     public UserDto.UserResponse updateUserInfo(UserDto.UpdateRequest request, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow();
-        if (request.getNickname() != null)
+        if (!checkNicknameDuplicate(request.getNickname()) && request.getNickname() != null)
             user.setNickname(request.getNickname());
         if (request.getStudentNo() != 0)
             user.setStudentNo(request.getStudentNo());
         return UserDto.UserResponse.of(user);
     }
-
-
 }
