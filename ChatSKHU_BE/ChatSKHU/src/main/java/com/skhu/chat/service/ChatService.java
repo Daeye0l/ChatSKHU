@@ -40,7 +40,7 @@ public class ChatService {
 	
 	@Transactional
 	public ChatDto.ChatResponse chat(Long chatRoomId, ChatDto.ChatRequest chatRequest, String email) {
-		if(chatRoomId==0){
+		if(chatRoomId==-1){
 			ChatDto.ChatRoomResponse chatRoom = createChatRoom(email);
 			chatRoomId = chatRoom.getId();
 		}
