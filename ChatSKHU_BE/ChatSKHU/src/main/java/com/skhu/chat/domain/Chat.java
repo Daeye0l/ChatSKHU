@@ -32,10 +32,15 @@ public class Chat extends BaseTimeEntity {
 	@Column(length = 500)
 	private String answer;
 
+	@ManyToOne
+	@JoinColumn(name = "CHATROOM_ID")
+	private ChatRoom chatRoom;
+
 	@Builder
-	public Chat(String question, String answer, User user) {
+	public Chat(String question, String answer, User user, ChatRoom chatRoom) {
 		this.question = question;
 		this.answer = answer;
 		this.user = user;
+		this.chatRoom = chatRoom;
 	}
 }

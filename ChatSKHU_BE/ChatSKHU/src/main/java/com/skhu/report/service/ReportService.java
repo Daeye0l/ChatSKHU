@@ -3,6 +3,9 @@ package com.skhu.report.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.skhu.report.domain.Report;
@@ -20,6 +23,29 @@ import lombok.RequiredArgsConstructor;
 public class ReportService {
 	private final UserRepository userRepository;
 	private final ReportRepository reportRepository;
+
+	@Data
+	@AllArgsConstructor
+	public class Order {
+		int value;
+		String label;
+	}
+
+	Order[] orders = new Order[] {
+			new Order(0, "정렬 순서"),
+			new Order(1, "학번 오름차순"),
+			new Order(2, "학번 내림차순"),
+			new Order(3, "이름 오름차순"),
+			new Order(4, "학과 오름차순")
+	};
+
+	static Sort[] sorts = new Sort[] {
+			Sort.by(Sort.Direction.ASC, "id"),
+			Sort.by(Sort.Direction.ASC, "studentNo"),
+			Sort.by(Sort.Direction.DESC, "studentNo"),
+			Sort.by(Sort.Direction.ASC, "name"),
+			Sort.by(Sort.Direction.ASC, "department.name"),
+	};
 	
 	@Transactional
 	public void reportSave(ReportDto.ReportSaveRequest reportSaveRequest, String email) {
@@ -45,4 +71,14 @@ public class ReportService {
         	return reportSearchResponse;
         }).collect(Collectors.toList());
     }
+
+
+//	public List<Report> findAll(Pagination pagination) {
+//		int orderIndex = pagination.getOd();
+//		PageRequest pageRequest = PageRequest.of(pagination.getPg() - 1,
+//				pagination.getSz(), sorts[orderIndex]);
+//		Page<Student> page;
+//		if (pagination.getSt().isEmpty())
+//			page = reportRepository.findBy
+//	}
 }
