@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import java.security.Principal;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +24,6 @@ import reactor.core.publisher.Flux;
 @RequiredArgsConstructor
 @Tag(name = "GPTController", description = "GPT 답변 생성 관련 API")
 public class ChatController {
-	@Value("${openai.model}")
-	private String model;
-	
 	private final ChatService chatService;
 	
 	@Operation(summary = "OpenAI API 호출", description = "GPT 답변 확인")
