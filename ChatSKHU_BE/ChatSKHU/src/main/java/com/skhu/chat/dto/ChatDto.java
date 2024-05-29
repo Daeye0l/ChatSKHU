@@ -30,6 +30,7 @@ public class ChatDto {
         private String question;
         private String answer;
         private LocalDateTime createdDate;
+        private Long chatRoomId;
     }
 
     @Data

@@ -121,6 +121,7 @@ public class ChatService {
         	chatSearchResponse.setQuestion(chat.getQuestion());
         	chatSearchResponse.setAnswer(chat.getAnswer());
         	chatSearchResponse.setCreatedDate(chat.getCreatedDate());
+			chatSearchResponse.setChatRoomId(chatRoomId);
         	return chatSearchResponse;
         }).collect(Collectors.toList());
     }
