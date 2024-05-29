@@ -110,12 +110,12 @@ public class ChatService {
 	}
 	
 	@Transactional
-    public List<ChatDto.ChatSearchResponse> findByUserIdOrderByCreatedDateDesc(String email) {
-		User user = userRepository.findByEmail(email).orElseThrow();
-        List<Chat> chats = chatRepository.findByUserIdOrderByCreatedDateDesc(user.getId());
+    public List<ChatDto.ChatSearchResponse> findByUserIdOrderByCreatedDateDesc(Long chatRoomId) {
+        List<Chat> chats = chatRepository.findByChatRoomIdOrderByCreatedDateDesc(chatRoomId);
         
         return chats.stream().map(chat -> {
         	ChatSearchResponse chatSearchResponse = new ChatSearchResponse();
+			chatSearchResponse.setId(chat.getId());
         	chatSearchResponse.setQuestion(chat.getQuestion());
         	chatSearchResponse.setAnswer(chat.getAnswer());
         	chatSearchResponse.setCreatedDate(chat.getCreatedDate());
