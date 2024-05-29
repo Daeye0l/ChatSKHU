@@ -3,18 +3,18 @@ package com.skhu.report.dto;
 import lombok.*;
 import java.time.LocalDateTime;
 
-import com.skhu.chat.dto.ChatDto;
-import com.skhu.oauth.domain.User;
-
 public class ReportDto {
 	@Data
     @AllArgsConstructor
     @NoArgsConstructor
 	public static class ReportSearchResponse {
+		private Long id;
 		private String title;
 	    private String content;
 	    private String answer;
-	    private LocalDateTime createdDate;	
+	    private LocalDateTime createdDate;
+	    private LocalDateTime modifiedDate;
+	    private String nickName;
 	}
 	
 	@Data
@@ -23,5 +23,12 @@ public class ReportDto {
 	public static class ReportSaveRequest {
 		private String title;
 		private String content;
+	}
+	
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class ReportAddAnswer {
+		private String answer;
 	}
 }

@@ -13,7 +13,7 @@ import jakarta.persistence.Column;
 import lombok.*;
 
 @Entity
-@Getter
+@Data
 @Table(name = "report")
 @NoArgsConstructor
 public class Report extends BaseTimeEntity {
@@ -36,9 +36,10 @@ public class Report extends BaseTimeEntity {
 	private String answer;
 	
 	@Builder
-	public Report(String title, String content, User user) {
+	public Report(String title, String content, String answer, User user) {
 		this.title = title;
 		this.content = content;
+		this.answer = answer;
 		this.user = user;
 	}
 }
