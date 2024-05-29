@@ -40,10 +40,6 @@ public class ChatService {
 	
 	@Transactional
 	public ChatDto.ChatResponse chat(Long chatRoomId, ChatDto.ChatRequest chatRequest, String email) {
-		if(chatRoomId==-1){
-			ChatDto.ChatRoomResponse chatRoom = createChatRoom(email);
-			chatRoomId = chatRoom.getId();
-		}
 
 		User user = userRepository.findByEmail(email).orElseThrow();
 		FlaskResponse flaskResponse = getPrompt(chatRequest.getQuestion());
@@ -57,6 +53,12 @@ public class ChatService {
 		String answer = gptResponse.getChoices().get(0).getMessage().getContent();
 		ChatDto.ChatResponse chatResponse = new ChatDto.ChatResponse();
 		chatResponse.setAnswer(answer);
+
+		if(chatRoomId==-1){
+			ChatDto.ChatRoomResponse chatRoom = createChatRoom(email);
+			chatRoomId = chatRoom.getId();
+			chatResponse.setChatRoomId(chatRoomId);
+		}
 
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).get();
 
@@ -110,7 +112,7 @@ public class ChatService {
 	}
 	
 	@Transactional
-    public List<ChatDto.ChatSearchResponse> findByUserIdOrderByCreatedDateDesc(Long chatRoomId) {
+    public List<ChatDto.ChatSearchResponse> getChatList(Long chatRoomId) {
         List<Chat> chats = chatRepository.findByChatRoomIdOrderByCreatedDateDesc(chatRoomId);
         
         return chats.stream().map(chat -> {

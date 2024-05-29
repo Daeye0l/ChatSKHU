@@ -3,8 +3,11 @@ package com.skhu.report.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.skhu.report.domain.Pagination;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -88,12 +91,16 @@ public class ReportService {
     }
 
 
-//	public List<Report> findAll(Pagination pagination) {
-//		int orderIndex = pagination.getOd();
-//		PageRequest pageRequest = PageRequest.of(pagination.getPg() - 1,
-//				pagination.getSz(), sorts[orderIndex]);
-//		Page<Student> page;
-//		if (pagination.getSt().isEmpty())
-//			page = reportRepository.findBy
-//	}
+	public List<Report> findAll(Pagination pagination) {
+		int orderIndex = pagination.getOd();
+		PageRequest pageRequest = PageRequest.of(pagination.getPg() - 1,
+				pagination.getSz(), sorts[orderIndex]);
+		Page<Report> page;
+		if (pagination.getSt().length() == 0)
+			page = reportRepository.findAll(pageRequest);
+		else
+			page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWith(pagination.getSt(), pagination.getSt(), pageRequest);
+		pagination.setRecordCount((int)page.getTotalElements());
+		return page.getContent();
+	}
 }
