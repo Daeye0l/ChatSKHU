@@ -3,6 +3,8 @@ package com.skhu.oauth.controller;
 import com.skhu.common.UserLevelCheck;
 import com.skhu.oauth.dto.UserDto;
 import com.skhu.oauth.service.AdminService;
+import com.skhu.report.service.ReportService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +26,12 @@ import static com.skhu.oauth.domain.UserLevel.ADMIN;
 public class AdminController {
 
     private final AdminService adminService;
+    private final ReportService reportService;
 
-    @GetMapping("/users")
-    @UserLevelCheck(level = ADMIN)
-    public ResponseEntity<Page<UserDto.UserResponse>> getUsers(@RequestBody UserDto.UserSearchRequest request,
-                                                               @PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.ok(adminService.getUsers(request, pageable));
+    @Operation(summary = "Report 삭제", description = "개선사항 db에서 삭제")
+    @DeleteMapping("/{reportId}")
+    public void reportDelete(@PathVariable("reportId") Long reportId) {
+        reportService.reportDelete(reportId);
     }
 
     @DeleteMapping("/{id}")

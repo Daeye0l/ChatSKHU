@@ -18,7 +18,8 @@ public class ChatDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ChatResponse {
-        private  String answer;
+        private String answer;
+        private Long chatRoomId;
     }
     
     @Data
