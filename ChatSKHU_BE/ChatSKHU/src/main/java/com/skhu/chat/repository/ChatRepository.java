@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ChatRepository extends JpaRepository<Chat, Long>{
-	List<Chat> findByUserIdOrderByCreatedDateDesc(Long userId);
+	List<Chat> findByChatRoomIdOrderByCreatedDateDesc(Long userId);
 }

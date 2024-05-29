@@ -25,6 +25,7 @@ public class ChatDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ChatSearchResponse {
+        private Long id;
         private String question;
         private String answer;
         private LocalDateTime createdDate;
