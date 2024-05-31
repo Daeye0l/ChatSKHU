@@ -27,16 +27,22 @@ import lombok.RequiredArgsConstructor;
 public class ReportController {
 	private final ReportService reportService;
 	
-	@Operation(summary = "Report 저장", description = "개선사항 제목과 내용 db에 저장")
+	@Operation(summary = "Report 저장", description = "개선사항 저장")
 	@PostMapping
 	public void reportSave(@RequestBody ReportDto.ReportSaveRequest reportSaveRequest, Principal principal) {
 		reportService.reportSave(reportSaveRequest, principal.getName());
 	}
 	
-	@Operation(summary = "Report 삭제", description = "개선사항 db에서 삭제")
+	@Operation(summary = "Report 삭제", description = "개선사항 삭제")
 	@DeleteMapping("/{reportId}")
 	public void reportDelete(@PathVariable("reportId") Long reportId) {
 		reportService.reportDelete(reportId);
+	}
+	
+	@Operation(summary = "Report 수정", description = "개선사항 수정")
+	@PutMapping("/{reportId}")
+	public void reportModify(@PathVariable("reportId") Long reportId, @RequestBody ReportDto.ReportSaveRequest reportSaveRequest) {
+		reportService.reportModify(reportId, reportSaveRequest);
 	}
 	
 	@Operation(summary = "Report Answer 저장", description = "답변 내용 db에 저장")

@@ -67,9 +67,18 @@ public class ReportService {
 	}
 	
 	@Transactional
+	public void reportModify(Long reportId, ReportDto.ReportSaveRequest reportSaveRequest) {
+		Report report = reportRepository.findById(reportId).orElseThrow();
+		report.setTitle(reportSaveRequest.getTitle());
+		report.setContent(reportSaveRequest.getContent());
+		reportRepository.save(report);
+	}
+	
+	@Transactional
 	public void updateAnswer(Long reportId, ReportDto.ReportAddAnswer reportAddAnswer, String email) {
 		Report report = reportRepository.findById(reportId).orElseThrow();
 		report.setAnswer(reportAddAnswer.getAnswer());
+		reportRepository.save(report);
 	}
 	
 	@Transactional
