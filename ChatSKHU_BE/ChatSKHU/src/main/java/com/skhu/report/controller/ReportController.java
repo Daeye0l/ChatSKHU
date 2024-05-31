@@ -29,26 +29,26 @@ public class ReportController {
 	
 	@Operation(summary = "Report 저장", description = "개선사항 저장")
 	@PostMapping
-	public void reportSave(@RequestBody ReportDto.ReportSaveRequest reportSaveRequest, Principal principal) {
-		reportService.reportSave(reportSaveRequest, principal.getName());
+	public ResponseEntity<ReportDto.ReportResponse> reportSave(@RequestBody ReportDto.ReportSaveRequest reportSaveRequest, Principal principal) {
+		return ResponseEntity.ok(reportService.reportSave(reportSaveRequest, principal.getName()));
 	}
 	
 	@Operation(summary = "Report 삭제", description = "개선사항 삭제")
 	@DeleteMapping("/{reportId}")
-	public void reportDelete(@PathVariable("reportId") Long reportId) {
-		reportService.reportDelete(reportId);
+	public ResponseEntity<ReportDto.ReportResponse> reportDelete(@PathVariable("reportId") Long reportId) {
+		return ResponseEntity.ok(reportService.reportDelete(reportId));
 	}
 	
 	@Operation(summary = "Report 수정", description = "개선사항 수정")
 	@PutMapping("/{reportId}")
-	public void reportModify(@PathVariable("reportId") Long reportId, @RequestBody ReportDto.ReportSaveRequest reportSaveRequest) {
-		reportService.reportModify(reportId, reportSaveRequest);
+	public ResponseEntity<ReportDto.ReportResponse> reportModify(@PathVariable("reportId") Long reportId, @RequestBody ReportDto.ReportSaveRequest reportSaveRequest) {
+		return ResponseEntity.ok(reportService.reportModify(reportId, reportSaveRequest));
 	}
 	
 	@Operation(summary = "Report Answer 저장", description = "답변 내용 db에 저장")
 	@PutMapping("/answer/{reportId}")
-	public void addAnswer(@PathVariable("reportId") Long reportId, @RequestBody ReportDto.ReportAddAnswer reportAddAnswer, Principal principal) {
-		reportService.updateAnswer(reportId, reportAddAnswer, principal.getName());
+	public ResponseEntity<ReportDto.ReportResponse> addAnswer(@PathVariable("reportId") Long reportId, @RequestBody ReportDto.ReportAddAnswer reportAddAnswer, Principal principal) {
+		return ResponseEntity.ok(reportService.updateAnswer(reportId, reportAddAnswer, principal.getName()));
 	}
 	
 	@Operation(summary = "ReportList 확인", description = "UserId에 따른 CreatedDate 최신순 Report 목록 조회")

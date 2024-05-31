@@ -28,6 +28,16 @@ public class ReportDto {
 	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor
+	public static class ReportResponse {
+		private Long id;
+		private String title;
+		private String content;
+		private String answer;
+	}
+	
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
 	public static class ReportAddAnswer {
 		private String answer;
 	}

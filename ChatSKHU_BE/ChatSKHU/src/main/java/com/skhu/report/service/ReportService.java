@@ -51,34 +51,42 @@ public class ReportService {
 	};
 	
 	@Transactional
-	public void reportSave(ReportDto.ReportSaveRequest reportSaveRequest, String email) {
+	public ReportDto.ReportResponse reportSave(ReportDto.ReportSaveRequest reportSaveRequest, String email) {
 		User user = userRepository.findByEmail(email).orElseThrow();
-		reportRepository.save(Report.builder()
+		Report report = reportRepository.save(Report.builder()
 				.title(reportSaveRequest.getTitle())
 				.content(reportSaveRequest.getContent())
 				.user(user)
 				.build());
+		ReportDto.ReportResponse reportSaveResponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
+		return reportSaveResponse;
 	}
 	
 	@Transactional
-	public void reportDelete(Long reportId) {
+	public ReportDto.ReportResponse reportDelete(Long reportId) {
 		Report report = reportRepository.findById(reportId).orElseThrow();
 		reportRepository.delete(report);
+		ReportDto.ReportResponse reportDeleteReponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
+		return reportDeleteReponse;
 	}
 	
 	@Transactional
-	public void reportModify(Long reportId, ReportDto.ReportSaveRequest reportSaveRequest) {
+	public ReportDto.ReportResponse reportModify(Long reportId, ReportDto.ReportSaveRequest reportSaveRequest) {
 		Report report = reportRepository.findById(reportId).orElseThrow();
 		report.setTitle(reportSaveRequest.getTitle());
 		report.setContent(reportSaveRequest.getContent());
 		reportRepository.save(report);
+		ReportDto.ReportResponse reportModifyResponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
+		return reportModifyResponse;
 	}
 	
 	@Transactional
-	public void updateAnswer(Long reportId, ReportDto.ReportAddAnswer reportAddAnswer, String email) {
+	public ReportDto.ReportResponse updateAnswer(Long reportId, ReportDto.ReportAddAnswer reportAddAnswer, String email) {
 		Report report = reportRepository.findById(reportId).orElseThrow();
 		report.setAnswer(reportAddAnswer.getAnswer());
 		reportRepository.save(report);
+		ReportDto.ReportResponse updateAnswerResponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
+		return updateAnswerResponse;
 	}
 	
 	@Transactional
