@@ -19,21 +19,21 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @RestController
-@RequestMapping("/gpt")
+@RequestMapping("/chat")
 @RequiredArgsConstructor
-@Tag(name = "GPTController", description = "GPT 답변 생성 관련 API")
+@Tag(name = "Chat Controller", description = "Chat 관련 API")
 public class ChatController {
     private final ChatService chatService;
 
     @Operation(summary = "OpenAI API 호출", description = "GPT 답변 확인")
-    @PostMapping("/chat/{chatRoomId}")
-    public ResponseEntity<ChatDto.ChatResponse> chat(@PathVariable Long chatRoomId, @RequestBody ChatDto.ChatRequest chatRequest, Principal principal) {
+    @PostMapping("/{chatRoomId}")
+    public ResponseEntity<ChatDto.ChatResponse> chat(@PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatDto.ChatRequest chatRequest, Principal principal) {
         return ResponseEntity.ok(chatService.chat(chatRoomId, chatRequest, principal.getName()));
     }
 
     @Operation(summary = "ChatList 확인", description = "UserId에 따른 CreatedDate 최신순 Chat 목록 조회")
-    @GetMapping("/chat/{chatRoomId}")
-    public ResponseEntity<List<ChatDto.ChatSearchResponse>> chatList(@PathVariable Long chatRoomId) {
+    @GetMapping("/{chatRoomId}")
+    public ResponseEntity<List<ChatDto.ChatSearchResponse>> chatList(@PathVariable("chatRoomId") Long chatRoomId) {
         return ResponseEntity.ok(chatService.getChatList(chatRoomId));
     }
 
@@ -57,7 +57,7 @@ public class ChatController {
             summary = "ChatRoom Title 수정",
             description = "ChatRoom Title 수정하는 API")
     @PutMapping("chatroom/{chatRoomId}")
-    public ResponseEntity<ChatDto.ChatRoomResponse> updateChatRoomTitle(@PathVariable Long
+    public ResponseEntity<ChatDto.ChatRoomResponse> updateChatRoomTitle(@PathVariable("chatRoomId") Long
                                                                                 chatRoomId, @RequestBody ChatDto.ChatRoomUpdateRequest request) {
         return ResponseEntity.ok(chatService.updateChatRoomTitle(request, chatRoomId));
     }

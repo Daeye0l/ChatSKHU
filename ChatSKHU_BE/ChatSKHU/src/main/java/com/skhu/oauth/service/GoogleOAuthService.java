@@ -3,8 +3,8 @@ package com.skhu.oauth.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.skhu.oauth.dto.OAuthDto;
 import com.skhu.error.CustomException;
+import com.skhu.oauth.dto.OAuthDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

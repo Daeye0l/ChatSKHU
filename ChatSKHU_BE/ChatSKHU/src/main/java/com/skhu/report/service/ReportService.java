@@ -1,46 +1,44 @@
 package com.skhu.report.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.skhu.oauth.domain.User;
+import com.skhu.oauth.repository.UserRepository;
 import com.skhu.report.domain.Pagination;
+import com.skhu.report.domain.Report;
+import com.skhu.report.dto.ReportDto;
+import com.skhu.report.dto.ReportDto.ReportSearchResponse;
+import com.skhu.report.repository.ReportRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.skhu.report.domain.Report;
-import com.skhu.report.dto.ReportDto;
-import com.skhu.report.dto.ReportDto.ReportSearchResponse;
-import com.skhu.report.repository.ReportRepository;
-import com.skhu.oauth.domain.User;
-import com.skhu.oauth.repository.UserRepository;
-
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ReportService {
-	private final UserRepository userRepository;
-	private final ReportRepository reportRepository;
+    private final UserRepository userRepository;
+    private final ReportRepository reportRepository;
 
-	@Data
-	@AllArgsConstructor
-	public class Order {
-		int value;
-		String label;
-	}
+    @Data
+    @AllArgsConstructor
+    public class Order {
+        int value;
+        String label;
+    }
 
-	Order[] orders = new Order[] {
-			new Order(0, "정렬 순서"),
-			new Order(1, "학번 오름차순"),
-			new Order(2, "학번 내림차순"),
-			new Order(3, "이름 오름차순"),
-			new Order(4, "학과 오름차순")
-	};
+    Order[] orders = new Order[]{
+            new Order(0, "정렬 순서"),
+            new Order(1, "학번 오름차순"),
+            new Order(2, "학번 내림차순"),
+            new Order(3, "이름 오름차순"),
+            new Order(4, "학과 오름차순")
+    };
 
 	static Sort[] sorts = new Sort[] {
 			Sort.by(Sort.Direction.ASC, "id"),
@@ -89,35 +87,35 @@ public class ReportService {
 		return updateAnswerResponse;
 	}
 	
-	@Transactional
+    @Transactional
     public List<ReportDto.ReportSearchResponse> findByUserIdOrderByCreatedDateDesc(String email) {
-		User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow();
         List<Report> reports = reportRepository.findByUserIdOrderByCreatedDateDesc(user.getId());
-        
+
         return reports.stream().map(report -> {
-        	ReportSearchResponse reportSearchResponse = new ReportSearchResponse();
-        	reportSearchResponse.setId(report.getId());
-        	reportSearchResponse.setTitle(report.getTitle());
-        	reportSearchResponse.setContent(report.getContent());
-        	reportSearchResponse.setAnswer(report.getAnswer());
-        	reportSearchResponse.setCreatedDate(report.getCreatedDate());
-        	reportSearchResponse.setModifiedDate(report.getModifiedDate());
-        	reportSearchResponse.setNickName(user.getNickname());
-        	return reportSearchResponse;
+            ReportSearchResponse reportSearchResponse = new ReportSearchResponse();
+            reportSearchResponse.setId(report.getId());
+            reportSearchResponse.setTitle(report.getTitle());
+            reportSearchResponse.setContent(report.getContent());
+            reportSearchResponse.setAnswer(report.getAnswer());
+            reportSearchResponse.setCreatedDate(report.getCreatedDate());
+            reportSearchResponse.setModifiedDate(report.getModifiedDate());
+            reportSearchResponse.setNickName(user.getNickname());
+            return reportSearchResponse;
         }).collect(Collectors.toList());
     }
 
 
-	public List<Report> findAll(Pagination pagination) {
-		int orderIndex = pagination.getOd();
-		PageRequest pageRequest = PageRequest.of(pagination.getPg() - 1,
-				pagination.getSz(), sorts[orderIndex]);
-		Page<Report> page;
-		if (pagination.getSt().length() == 0)
-			page = reportRepository.findAll(pageRequest);
-		else
-			page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWith(pagination.getSt(), pagination.getSt(), pageRequest);
-		pagination.setRecordCount((int)page.getTotalElements());
-		return page.getContent();
-	}
+    public List<Report> findAll(Pagination pagination) {
+        int orderIndex = pagination.getOd();
+        PageRequest pageRequest = PageRequest.of(pagination.getPg() - 1,
+                pagination.getSz(), sorts[orderIndex]);
+        Page<Report> page;
+        if (pagination.getSt().length() == 0)
+            page = reportRepository.findAll(pageRequest);
+        else
+            page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWith(pagination.getSt(), pagination.getSt(), pageRequest);
+        pagination.setRecordCount((int) page.getTotalElements());
+        return page.getContent();
+    }
 }

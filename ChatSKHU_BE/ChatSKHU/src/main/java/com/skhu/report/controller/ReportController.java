@@ -1,24 +1,15 @@
 package com.skhu.report.controller;
 
-import java.security.Principal;
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.skhu.report.dto.ReportDto;
 import com.skhu.report.service.ReportService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/report")
@@ -44,13 +35,8 @@ public class ReportController {
 	public ResponseEntity<ReportDto.ReportResponse> reportModify(@PathVariable("reportId") Long reportId, @RequestBody ReportDto.ReportSaveRequest reportSaveRequest) {
 		return ResponseEntity.ok(reportService.reportModify(reportId, reportSaveRequest));
 	}
-	
-	@Operation(summary = "Report Answer 저장", description = "답변 내용 db에 저장")
-	@PutMapping("/answer/{reportId}")
-	public ResponseEntity<ReportDto.ReportResponse> addAnswer(@PathVariable("reportId") Long reportId, @RequestBody ReportDto.ReportAddAnswer reportAddAnswer, Principal principal) {
-		return ResponseEntity.ok(reportService.updateAnswer(reportId, reportAddAnswer, principal.getName()));
-	}
-	
+
+
 	@Operation(summary = "ReportList 확인", description = "UserId에 따른 CreatedDate 최신순 Report 목록 조회")
 	@GetMapping("/list")
 	public ResponseEntity<List<ReportDto.ReportSearchResponse>> reportList(Principal principal) {

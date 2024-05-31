@@ -1,28 +1,25 @@
 package com.skhu.chat.service;
 
-import com.skhu.chat.dto.*;
-import com.skhu.chat.dto.ChatDto.ChatSearchResponse;
 import com.skhu.chat.domain.Chat;
 import com.skhu.chat.domain.ChatRoom;
-import com.skhu.oauth.domain.User;
+import com.skhu.chat.dto.*;
+import com.skhu.chat.dto.ChatDto.ChatSearchResponse;
 import com.skhu.chat.repository.ChatRepository;
 import com.skhu.chat.repository.ChatRoomRepository;
+import com.skhu.oauth.domain.User;
 import com.skhu.oauth.repository.UserRepository;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import reactor.core.publisher.Flux;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +55,7 @@ public class ChatService {
 			ChatDto.ChatRoomResponse chatRoom = createChatRoom(email);
 			chatRoomId = chatRoom.getId();
 			chatResponse.setChatRoomId(chatRoomId);
+			chatRoomRepository.findById(chatRoomId).get().setTitle(chatRequest.getQuestion());
 		}
 
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).get();

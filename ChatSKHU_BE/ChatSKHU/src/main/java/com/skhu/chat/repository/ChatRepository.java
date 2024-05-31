@@ -1,10 +1,9 @@
 package com.skhu.chat.repository;
 
 import com.skhu.chat.domain.Chat;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ChatRepository extends JpaRepository<Chat, Long>{

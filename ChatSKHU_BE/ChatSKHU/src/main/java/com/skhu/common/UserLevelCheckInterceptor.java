@@ -1,7 +1,7 @@
 package com.skhu.common;
 
-import com.skhu.oauth.domain.User;
 import com.skhu.error.CustomException;
+import com.skhu.oauth.domain.User;
 import com.skhu.oauth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,7 +45,7 @@ public class UserLevelCheckInterceptor implements HandlerInterceptor {
                 .orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
         // UNAUTH : 0, USER : 1, ADMIN : 2
-        if (user.getUserLevel().ordinal() < userLevelCheck.level().ordinal()) {
+        if (user.getUserRole().ordinal() < userLevelCheck.level().ordinal()) {
             throw new CustomException(FORBIDDEN_USER_LEVEL);
         }
 

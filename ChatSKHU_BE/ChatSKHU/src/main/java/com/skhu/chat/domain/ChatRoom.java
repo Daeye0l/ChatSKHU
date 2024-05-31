@@ -3,7 +3,9 @@ package com.skhu.chat.domain;
 import com.skhu.common.BaseTimeEntity;
 import com.skhu.oauth.domain.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 

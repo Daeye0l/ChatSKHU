@@ -2,11 +2,11 @@ package com.skhu.oauth.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.skhu.error.CustomException;
 import com.skhu.oauth.domain.User;
-import com.skhu.oauth.domain.UserLevel;
+import com.skhu.oauth.domain.UserRole;
 import com.skhu.oauth.dto.OAuthDto;
 import com.skhu.oauth.dto.UserDto;
-import com.skhu.error.CustomException;
 import com.skhu.oauth.jwt.TokenProvider;
 import com.skhu.oauth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -159,7 +159,7 @@ public class KakaoOAuthService implements OAuthService {
         }
         OAuthDto.UserResponse userInfo = getUserInfo(accessToken);
         String email = userInfo.getEmail();
-        UserLevel userLevel = userRepository.findByEmail(email).orElseThrow().getUserLevel();
-        return tokenProvider.createToken(email, userLevel);
+        UserRole userRole = userRepository.findByEmail(email).orElseThrow().getUserRole();
+        return tokenProvider.createToken(email, userRole);
     }
 }
