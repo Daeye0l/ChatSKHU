@@ -1,7 +1,7 @@
 package com.skhu.oauth.dto;
 
 
-import com.skhu.oauth.domain.UserLevel;
+import com.skhu.oauth.domain.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -37,7 +37,7 @@ public class OAuthDto {
 
         private String imageUrl;
 
-        private UserLevel userLevel;
+        private UserRole userRole;
 
     }
 

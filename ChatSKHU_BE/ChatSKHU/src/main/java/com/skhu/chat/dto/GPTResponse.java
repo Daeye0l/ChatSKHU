@@ -1,8 +1,9 @@
 package com.skhu.chat.dto;
 
-import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 //gpt 응답을 위한 DTO 클래스

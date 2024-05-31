@@ -1,7 +1,7 @@
 package com.skhu.oauth.dto;
 
 import com.skhu.oauth.domain.User;
-import com.skhu.oauth.domain.UserLevel;
+import com.skhu.oauth.domain.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -54,23 +54,23 @@ public class UserDto {
 
         private String nickname;
 
-        private UserLevel userLevel;
+        private UserRole userRole;
 
         private String socialType;
         
         private int studentNo;
 
-        public UserResponse(String email, UserLevel userLevel, String nickname, String socialType) {
+        public UserResponse(String email, UserRole userRole, String nickname, String socialType) {
         }
 
-        public UserResponse(String email, UserLevel userLevel, String nickname, String socialType, int studentNo) {
+        public UserResponse(String email, UserRole userRole, String nickname, String socialType, int studentNo) {
         }
 
         public static UserResponse of(User user){
             return UserResponse.builder()
                     .id(user.getId())
                     .email(user.getEmail())
-                    .userLevel(user.getUserLevel())
+                    .userRole(user.getUserRole())
                     .nickname(user.getNickname())
                     .socialType(user.getSocialType())
                     .studentNo(user.getStudentNo())
@@ -88,14 +88,14 @@ public class UserDto {
 
         private String nickname;
 
-        private UserLevel userLevel;
+        private UserRole userRole;
 
         @Builder
-        public UserSearchRequest(Long id, String email, String nickname, UserLevel userLevel) {
+        public UserSearchRequest(Long id, String email, String nickname, UserRole userRole) {
             this.id = id;
             this.email = email;
             this.nickname = nickname;
-            this.userLevel = userLevel;
+            this.userRole = userRole;
         }
 
     }

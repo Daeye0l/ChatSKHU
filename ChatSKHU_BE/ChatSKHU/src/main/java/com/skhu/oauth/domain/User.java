@@ -1,14 +1,12 @@
 package com.skhu.oauth.domain;
 
-import com.skhu.common.BaseTimeEntity;
 import com.skhu.chat.domain.ChatRoom;
+import com.skhu.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 
-import static com.skhu.oauth.domain.UserLevel.UNAUTH;
-import static com.skhu.oauth.domain.UserLevel.USER;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -26,7 +24,7 @@ public class User extends BaseTimeEntity {
     protected String email;
 
     @Enumerated(EnumType.STRING)
-    protected UserLevel userLevel;
+    protected UserRole userRole;
 
     private String nickname;
 
@@ -49,12 +47,12 @@ public class User extends BaseTimeEntity {
         this.studentNo = studentNo;
         this.socialId = socialId;
         this.socialType = socialType;
-        this.userLevel = UNAUTH;
+        this.userRole = UserRole.ROLE_UNAUTH;
     }
 
     public void certify() {
-        if (this.userLevel == UNAUTH) {
-            this.userLevel = USER;
+        if (this.userRole == UserRole.ROLE_UNAUTH) {
+            this.userRole = UserRole.ROLE_USER;
         }
 
 

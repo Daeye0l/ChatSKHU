@@ -1,7 +1,7 @@
 package com.skhu.oauth.jwt;
 
 
-import com.skhu.oauth.domain.UserLevel;
+import com.skhu.oauth.domain.UserRole;
 import com.skhu.oauth.dto.UserDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -18,7 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,13 +39,13 @@ public class TokenProvider {
         this.refreshTokenValidityTime = 1000 * 60 * 60 * 24 * 30;
     }
 
-    public UserDto.LoginResponse createToken(String email, UserLevel userLevel) {
+    public UserDto.LoginResponse createToken(String email, UserRole userRole) {
         long now = (new Date()).getTime();
         Date tokenExpiredTime = new Date(now + accessTokenValidityTime);
 
         String accessToken = Jwts.builder()
                 .setSubject(email)
-                .claim("userLevel", userLevel.toString())
+                .claim("userRole", userRole.toString())
                 .setExpiration(tokenExpiredTime)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -108,14 +110,14 @@ public class TokenProvider {
         } catch (Exception e) {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
-        if (claims.get("userLevel") == null) {
-            throw new IllegalArgumentException("권한 정보가 없는 토큰입니다."+claims.get("userLevel")+accessToken+"/n"+claims.getSubject());
+        if (claims.get("userRole") == null) {
+            throw new IllegalArgumentException("권한 정보가 없는 토큰입니다."+claims.get("userRole")+accessToken+"/n"+claims.getSubject());
         }
 
 
 
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get("userLevel").toString().split(","))
+                Arrays.stream(claims.get("userRole").toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
         UserDetails principal = new User(claims.getSubject(), "", authorities);
