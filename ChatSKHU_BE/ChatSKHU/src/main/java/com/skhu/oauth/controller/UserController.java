@@ -1,6 +1,5 @@
 package com.skhu.oauth.controller;
 
-import com.skhu.common.ApiResponse;
 import com.skhu.common.UserLevelCheck;
 import com.skhu.oauth.dto.UserDto;
 import com.skhu.oauth.service.UserService;
@@ -8,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -25,8 +25,8 @@ public class UserController {
             description = "소셜 로그인 후 사용자 정보 받는 API"
     )
     @PostMapping("/signup")
-    public ApiResponse<UserDto.LoginResponse> signUp(@Valid @RequestBody UserDto.SignUpRequest request, Principal principal){
-        return ApiResponse.ok(userService.signup(request, principal.getName()));
+    public ResponseEntity<UserDto.LoginResponse> signUp(@Valid @RequestBody UserDto.SignUpRequest request, Principal principal){
+        return ResponseEntity.ok(userService.signup(request, principal.getName()));
     }
 
     @PostMapping("/update")
@@ -34,8 +34,8 @@ public class UserController {
             summary = "회원 정보 수정",
             description = "회원 정보 수정하는 API"
     )
-    public ApiResponse<UserDto.UserResponse> updateUserInfo(@RequestBody UserDto.UpdateRequest request, Principal principal){
-        return ApiResponse.ok(userService.updateUserInfo(request, principal.getName()));
+    public ResponseEntity<UserDto.UserResponse> updateUserInfo(@RequestBody UserDto.UpdateRequest request, Principal principal){
+        return ResponseEntity.ok(userService.updateUserInfo(request, principal.getName()));
     }
 
 
@@ -45,8 +45,8 @@ public class UserController {
             summary = "마이페이지",
             description = "회원 정보 조회하는 API"
     )
-    public ApiResponse<UserDto.UserResponse> myPage(Principal principal) {
-        return ApiResponse.ok(userService.findByEmail(principal.getName()));
+    public ResponseEntity<UserDto.UserResponse> myPage(Principal principal) {
+        return ResponseEntity.ok(userService.findByEmail(principal.getName()));
     }
 
 
