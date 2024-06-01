@@ -183,5 +183,10 @@ public class ChatService {
                 .build(); 
     }
 
-
+	@Transactional
+	public void deleteChatRoom(Long chatRoomId){
+		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+				.orElseThrow(() -> new RuntimeException("해당하는 채팅방이 없습니다."));
+		chatRoomRepository.delete(chatRoom);
+	}
 }
