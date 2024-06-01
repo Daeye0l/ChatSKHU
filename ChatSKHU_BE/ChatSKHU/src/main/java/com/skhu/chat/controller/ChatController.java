@@ -61,6 +61,15 @@ public class ChatController {
                                                                                 chatRoomId, @RequestBody ChatDto.ChatRoomUpdateRequest request) {
         return ResponseEntity.ok(chatService.updateChatRoomTitle(request, chatRoomId));
     }
+
+    @Operation(
+            summary = "ChatRoom 삭제",
+            description = "ChatRoom 삭제하는 API")
+    @DeleteMapping("chatroom/{chatRoomId}")
+    public void deleteChatRoom(@PathVariable("chatRoomId") Long chatRoomId) {
+        chatService.deleteChatRoom(chatRoomId);
+    }
+
 	/*
 	@Operation(summary = "DB 저장", description = "질문과 답변 DB에 저장")
 	@PostMapping("/save")

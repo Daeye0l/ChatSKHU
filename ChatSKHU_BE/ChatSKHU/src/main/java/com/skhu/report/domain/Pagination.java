@@ -10,7 +10,6 @@ public class Pagination {
     int pg = 1;
     int sz = 10;
     int recordCount;
-    int od = 0;
     String st = "";
 
     public int getFirstRecordIndex() {
@@ -20,11 +19,11 @@ public class Pagination {
     public String getQueryString() {
         try {
             String encoded = URLEncoder.encode(st, "UTF-8");
-            return String.format("pg=%d&sz=%d&od=%d&st=%s", pg, sz, od, encoded);
+            return String.format("pg=%d&sz=%d&st=%s", pg, sz, encoded);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return String.format("pg=%d&sz=%d&od=%d&st=%s", pg, sz, od, st);
+        return String.format("pg=%d&sz=%d&st=%s", pg, sz, st);
     }
 
 

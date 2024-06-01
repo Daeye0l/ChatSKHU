@@ -35,7 +35,7 @@ public class TokenProvider {
             @Value("${jwt.secret}") String key) {
         byte[] keyBytes = Decoders.BASE64.decode(key);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.accessTokenValidityTime = 1000 * 60 * 60 * 365;
+        this.accessTokenValidityTime = 1000 * 60 * 60 * 12;
         this.refreshTokenValidityTime = 1000 * 60 * 60 * 24 * 30;
     }
 

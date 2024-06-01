@@ -1,5 +1,7 @@
 package com.skhu.report.controller;
 
+import com.skhu.report.domain.Pagination;
+import com.skhu.report.domain.Report;
 import com.skhu.report.dto.ReportDto;
 import com.skhu.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +41,7 @@ public class ReportController {
 
 	@Operation(summary = "ReportList 확인", description = "UserId에 따른 CreatedDate 최신순 Report 목록 조회")
 	@GetMapping("/list")
-	public ResponseEntity<List<ReportDto.ReportSearchResponse>> reportList(Principal principal) {
-		return ResponseEntity.ok(reportService.findByUserIdOrderByCreatedDateDesc(principal.getName()));
+	public ResponseEntity<List<ReportDto.ReportSearchResponse>> reportList(Pagination pagination) {
+		return ResponseEntity.ok(reportService.findAll(pagination));
 	}
 }
