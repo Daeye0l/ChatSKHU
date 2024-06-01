@@ -1,9 +1,11 @@
 package com.skhu.oauth.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.skhu.chat.domain.ChatRoom;
 import com.skhu.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 import java.util.List;
 
@@ -36,6 +38,9 @@ public class User extends BaseTimeEntity {
 
     private String socialId;
 
+    @JsonIgnore
+    @ToStringExclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user")
     private List<ChatRoom> chatRooms;
 
