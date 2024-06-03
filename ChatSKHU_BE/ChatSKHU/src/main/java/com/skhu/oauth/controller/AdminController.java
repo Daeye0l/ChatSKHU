@@ -1,5 +1,6 @@
 package com.skhu.oauth.controller;
 
+import com.skhu.oauth.domain.UserRole;
 import com.skhu.oauth.service.UserService;
 import com.skhu.report.dto.ReportDto;
 import com.skhu.report.service.ReportService;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-
 
 
 @RestController
@@ -33,8 +33,8 @@ public class AdminController {
     }
 
     @Operation(summary = "ADMIN 권한 부여", description = "관리자 권한 부여")
-    @PutMapping("/role{userId}")
-    public void changeUserRoleToAdmin(@PathVariable ("userId") Long userId){
-        userService.changeUserRoleToAdmin(userId);
+    @PutMapping("/role/{userId}")
+    public UserRole changeUserRoleToAdmin(@PathVariable("userId") Long userId) {
+        return userService.changeUserRoleToAdmin(userId);
     }
 }

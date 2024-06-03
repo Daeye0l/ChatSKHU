@@ -60,10 +60,11 @@ public class UserService {
     }
 
     @Transactional
-    public void changeUserRoleToAdmin(Long userId) {
+    public UserRole changeUserRoleToAdmin(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
         user.setUserRole(UserRole.ROLE_ADMIN);
         userRepository.save(user);
+        return user.getUserRole();
     }
 }
