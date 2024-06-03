@@ -39,9 +39,9 @@ public class ReportController {
 	}
 
 
-	@Operation(summary = "ReportList 확인", description = "UserId에 따른 CreatedDate 최신순 Report 목록 조회")
+	@Operation(summary = "ReportList 확인", description = "CreatedDate 최신순 Report 목록 조회")
 	@GetMapping("/list")
-	public ResponseEntity<List<ReportDto.ReportSearchResponse>> reportList(Pagination pagination) {
-		return ResponseEntity.ok(reportService.findAll(pagination));
+	public ResponseEntity<List<ReportDto.ReportSearchResponse>> reportList(@RequestParam(value = "pg", defaultValue = "1") int pg, @RequestParam(value = "sz", defaultValue = "10") int sz, @RequestParam(value = "st", defaultValue = "") String st) {
+		return ResponseEntity.ok(reportService.findAll(pg, sz, st));
 	}
 }
