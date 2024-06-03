@@ -91,16 +91,12 @@ public class ReportService {
     }
 
 
-    public List<ReportSearchResponse> findAll(Pagination pagination) {
+    public List<ReportSearchResponse> findAll(int pg, int sz, String st) {
+        Pagination pagination = new Pagination(pg, sz, st);
         PageRequest pageRequest = PageRequest.of(pagination.getPg() - 1,
                 pagination.getSz(),
                 Sort.Direction.ASC, "id");
-        Page<Report> page;
-        if (pagination.getSt().length() == 0)
-            page = reportRepository.findAll(pageRequest);
-        else
-            page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWith(pagination.getSt(), pagination.getSt(), pageRequest);
-        pagination.setRecordCount((int)page.getTotalElements());
+        Page<Report> page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWithOrderByCreatedDateDesc(pagination.getSt(), pagination.getSt(), pageRequest);
         return page.getContent().stream()
                 .map(this::convertToReportSearchResponse)
                 .collect(Collectors.toList());
@@ -114,7 +110,7 @@ public class ReportService {
                 report.getAnswer(),
                 report.getCreatedDate(),
                 report.getModifiedDate(),
-                report.getUser().getNickname() // Assuming Report has a User entity with a getNickName() method
+                report.getUser().getNickname()
         );
     }
 }
