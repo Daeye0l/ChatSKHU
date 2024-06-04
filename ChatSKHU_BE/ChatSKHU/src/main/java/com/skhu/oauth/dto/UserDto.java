@@ -53,9 +53,9 @@ public class UserDto {
         private UserRole userRole;
 
         private String socialType;
+
+        private String imageUrl;
         
-        public UserResponse(String email, UserRole userRole, String nickname, String socialType) {
-        }
 
 
         public static UserResponse of(User user){
@@ -65,6 +65,7 @@ public class UserDto {
                     .userRole(user.getUserRole())
                     .nickname(user.getNickname())
                     .socialType(user.getSocialType())
+                    .imageUrl(user.getImageUrl())
                     .build();
         }
     }

@@ -1,6 +1,5 @@
 package com.skhu.oauth.controller;
 
-import com.skhu.common.UserLevelCheck;
 import com.skhu.oauth.dto.UserDto;
 import com.skhu.oauth.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,7 +39,6 @@ public class UserController {
 
 
     @GetMapping
-    @UserLevelCheck
     @Operation(
             summary = "마이페이지",
             description = "회원 정보 조회하는 API"
