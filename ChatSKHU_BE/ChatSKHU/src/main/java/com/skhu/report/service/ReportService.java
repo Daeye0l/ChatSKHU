@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -91,15 +92,15 @@ public class ReportService {
     }
 
 
-    public List<ReportSearchResponse> findAll(int pg, int sz, String st) {
-        Pagination pagination = new Pagination(pg, sz, st);
-        PageRequest pageRequest = PageRequest.of(pagination.getPg() - 1,
-                pagination.getSz(),
-                Sort.Direction.ASC, "id");
-        Page<Report> page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWithOrderByCreatedDateDesc(pagination.getSt(), pagination.getSt(), pageRequest);
-        return page.getContent().stream()
+    public ReportDto.ReportPageResponse findAll(int pg, int sz, String st) {
+        Pageable pageable = PageRequest.of(pg-1,sz,Sort.by("id").descending());
+        Page<Report> page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWithOrderByCreatedDateDesc(st, st, pageable);
+        int totalPage = page.getTotalPages();
+        int currentPage = page.getNumber() + 1;
+        List<ReportSearchResponse> reports = page.getContent().stream()
                 .map(this::convertToReportSearchResponse)
                 .collect(Collectors.toList());
+        return new ReportDto.ReportPageResponse(reports, totalPage, currentPage);
     }
 
     private ReportSearchResponse convertToReportSearchResponse(Report report) {

@@ -1,7 +1,5 @@
 package com.skhu.report.controller;
 
-import com.skhu.report.domain.Pagination;
-import com.skhu.report.domain.Report;
 import com.skhu.report.dto.ReportDto;
 import com.skhu.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +39,7 @@ public class ReportController {
 
 	@Operation(summary = "ReportList 확인", description = "CreatedDate 최신순 Report 목록 조회")
 	@GetMapping("/list")
-	public ResponseEntity<List<ReportDto.ReportSearchResponse>> reportList(@RequestParam(value = "pg", defaultValue = "1") int pg, @RequestParam(value = "sz", defaultValue = "10") int sz, @RequestParam(value = "st", defaultValue = "") String st) {
+	public ResponseEntity<ReportDto.ReportPageResponse> reportList(@RequestParam(value = "pg", defaultValue = "1") int pg, @RequestParam(value = "sz", defaultValue = "10") int sz, @RequestParam(value = "st", defaultValue = "") String st) {
 		return ResponseEntity.ok(reportService.findAll(pg, sz, st));
 	}
 }
