@@ -149,6 +149,7 @@ public class KakaoOAuthService implements OAuthService {
                 .socialType(userInfo.getSocialType())
                 .email(userInfo.getEmail())
                 .imageUrl(userInfo.getImageUrl())
+                .nickname(userInfo.getNickname())
                 .build());
     }
 

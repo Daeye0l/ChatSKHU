@@ -12,24 +12,20 @@ public class UserDto {
     public static class SignUpRequest{
         @NotBlank
         private String nickname;
-        private int studentNo;
 
         @Builder
-        public SignUpRequest(String nickname, int studentNo){
+        public SignUpRequest(String nickname){
             this.nickname = nickname;
-            this.studentNo = studentNo;
         }
     }
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UpdateRequest{
         private String nickname;
-        private int studentNo;
 
         @Builder
-        public UpdateRequest(String nickname, int studentNo){
+        public UpdateRequest(String nickname){
             this.nickname = nickname;
-            this.studentNo = studentNo;
         }
     }
 
@@ -57,14 +53,10 @@ public class UserDto {
         private UserRole userRole;
 
         private String socialType;
+
+        private String imageUrl;
         
-        private int studentNo;
 
-        public UserResponse(String email, UserRole userRole, String nickname, String socialType) {
-        }
-
-        public UserResponse(String email, UserRole userRole, String nickname, String socialType, int studentNo) {
-        }
 
         public static UserResponse of(User user){
             return UserResponse.builder()
@@ -73,7 +65,7 @@ public class UserDto {
                     .userRole(user.getUserRole())
                     .nickname(user.getNickname())
                     .socialType(user.getSocialType())
-                    .studentNo(user.getStudentNo())
+                    .imageUrl(user.getImageUrl())
                     .build();
         }
     }

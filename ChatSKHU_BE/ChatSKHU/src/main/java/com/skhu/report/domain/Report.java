@@ -3,12 +3,11 @@ package com.skhu.report.domain;
 import com.skhu.common.BaseTimeEntity;
 import com.skhu.oauth.domain.User;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "report")
 @NoArgsConstructor
 public class Report extends BaseTimeEntity {

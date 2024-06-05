@@ -1,5 +1,8 @@
 package com.skhu.chat.dto;
 
+import com.skhu.chat.domain.Chat;
+import com.skhu.oauth.domain.User;
+import com.skhu.oauth.dto.UserDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -25,12 +28,23 @@ public class ChatDto {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @Builder
     public static class ChatSearchResponse {
         private Long id;
         private String question;
         private String answer;
         private LocalDateTime createdDate;
         private Long chatRoomId;
+
+        public static ChatSearchResponse of(Chat chat){
+            return ChatSearchResponse.builder()
+                    .id(chat.getId())
+                    .question(chat.getQuestion())
+                    .answer(chat.getAnswer())
+                    .createdDate(chat.getCreatedDate())
+                    .chatRoomId(chat.getChatRoom().getId())
+                    .build();
+        }
     }
 
     @Data

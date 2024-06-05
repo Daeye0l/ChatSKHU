@@ -35,7 +35,6 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow();
         user.setNickname(request.getNickname());
-        user.setStudentNo(request.getStudentNo());
         user.setUserRole(UserRole.ROLE_USER);
         userRepository.save(user);
         return tokenProvider.createToken(email, user.getUserRole());
@@ -54,16 +53,15 @@ public class UserService {
                 .orElseThrow();
         if (!checkNicknameDuplicate(request.getNickname()) && request.getNickname() != null)
             user.setNickname(request.getNickname());
-        if (request.getStudentNo() != 0)
-            user.setStudentNo(request.getStudentNo());
         return UserDto.UserResponse.of(user);
     }
 
     @Transactional
-    public void changeUserRoleToAdmin(Long userId) {
+    public UserRole changeUserRoleToAdmin(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
         user.setUserRole(UserRole.ROLE_ADMIN);
         userRepository.save(user);
+        return user.getUserRole();
     }
 }

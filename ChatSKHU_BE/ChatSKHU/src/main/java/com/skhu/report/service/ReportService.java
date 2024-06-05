@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -32,61 +33,46 @@ public class ReportService {
         String label;
     }
 
-    Order[] orders = new Order[]{
-            new Order(0, "정렬 순서"),
-            new Order(1, "학번 오름차순"),
-            new Order(2, "학번 내림차순"),
-            new Order(3, "이름 오름차순"),
-            new Order(4, "학과 오름차순")
-    };
 
-	static Sort[] sorts = new Sort[] {
-			Sort.by(Sort.Direction.ASC, "id"),
-			Sort.by(Sort.Direction.ASC, "studentNo"),
-			Sort.by(Sort.Direction.DESC, "studentNo"),
-			Sort.by(Sort.Direction.ASC, "name"),
-			Sort.by(Sort.Direction.ASC, "department.name"),
-	};
-	
-	@Transactional
-	public ReportDto.ReportResponse reportSave(ReportDto.ReportSaveRequest reportSaveRequest, String email) {
-		User user = userRepository.findByEmail(email).orElseThrow();
-		Report report = reportRepository.save(Report.builder()
-				.title(reportSaveRequest.getTitle())
-				.content(reportSaveRequest.getContent())
-				.user(user)
-				.build());
-		ReportDto.ReportResponse reportSaveResponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
-		return reportSaveResponse;
-	}
-	
-	@Transactional
-	public ReportDto.ReportResponse reportDelete(Long reportId) {
-		Report report = reportRepository.findById(reportId).orElseThrow();
-		reportRepository.delete(report);
-		ReportDto.ReportResponse reportDeleteReponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
-		return reportDeleteReponse;
-	}
-	
-	@Transactional
-	public ReportDto.ReportResponse reportModify(Long reportId, ReportDto.ReportSaveRequest reportSaveRequest) {
-		Report report = reportRepository.findById(reportId).orElseThrow();
-		report.setTitle(reportSaveRequest.getTitle());
-		report.setContent(reportSaveRequest.getContent());
-		reportRepository.save(report);
-		ReportDto.ReportResponse reportModifyResponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
-		return reportModifyResponse;
-	}
-	
-	@Transactional
-	public ReportDto.ReportResponse updateAnswer(Long reportId, ReportDto.ReportAddAnswer reportAddAnswer, String email) {
-		Report report = reportRepository.findById(reportId).orElseThrow();
-		report.setAnswer(reportAddAnswer.getAnswer());
-		reportRepository.save(report);
-		ReportDto.ReportResponse updateAnswerResponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
-		return updateAnswerResponse;
-	}
-	
+    @Transactional
+    public ReportDto.ReportResponse reportSave(ReportDto.ReportSaveRequest reportSaveRequest, String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+        Report report = reportRepository.save(Report.builder()
+                .title(reportSaveRequest.getTitle())
+                .content(reportSaveRequest.getContent())
+                .user(user)
+                .build());
+        ReportDto.ReportResponse reportSaveResponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
+        return reportSaveResponse;
+    }
+
+    @Transactional
+    public ReportDto.ReportResponse reportDelete(Long reportId) {
+        Report report = reportRepository.findById(reportId).orElseThrow();
+        reportRepository.delete(report);
+        ReportDto.ReportResponse reportDeleteReponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
+        return reportDeleteReponse;
+    }
+
+    @Transactional
+    public ReportDto.ReportResponse reportModify(Long reportId, ReportDto.ReportSaveRequest reportSaveRequest) {
+        Report report = reportRepository.findById(reportId).orElseThrow();
+        report.setTitle(reportSaveRequest.getTitle());
+        report.setContent(reportSaveRequest.getContent());
+        reportRepository.save(report);
+        ReportDto.ReportResponse reportModifyResponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
+        return reportModifyResponse;
+    }
+
+    @Transactional
+    public ReportDto.ReportResponse updateAnswer(Long reportId, ReportDto.ReportAddAnswer reportAddAnswer, String email) {
+        Report report = reportRepository.findById(reportId).orElseThrow();
+        report.setAnswer(reportAddAnswer.getAnswer());
+        reportRepository.save(report);
+        ReportDto.ReportResponse updateAnswerResponse = new ReportDto.ReportResponse(report.getId(), report.getTitle(), report.getContent(), report.getAnswer());
+        return updateAnswerResponse;
+    }
+
     @Transactional
     public List<ReportDto.ReportSearchResponse> findByUserIdOrderByCreatedDateDesc(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
@@ -106,16 +92,26 @@ public class ReportService {
     }
 
 
-    public List<Report> findAll(Pagination pagination) {
-        int orderIndex = pagination.getOd();
-        PageRequest pageRequest = PageRequest.of(pagination.getPg() - 1,
-                pagination.getSz(), sorts[orderIndex]);
-        Page<Report> page;
-        if (pagination.getSt().length() == 0)
-            page = reportRepository.findAll(pageRequest);
-        else
-            page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWith(pagination.getSt(), pagination.getSt(), pageRequest);
-        pagination.setRecordCount((int) page.getTotalElements());
-        return page.getContent();
+    public ReportDto.ReportPageResponse findAll(int pg, int sz, String st) {
+        Pageable pageable = PageRequest.of(pg-1,sz,Sort.by("id").descending());
+        Page<Report> page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWithOrderByCreatedDateDesc(st, st, pageable);
+        int totalPage = page.getTotalPages();
+        int currentPage = page.getNumber() + 1;
+        List<ReportSearchResponse> reports = page.getContent().stream()
+                .map(this::convertToReportSearchResponse)
+                .collect(Collectors.toList());
+        return new ReportDto.ReportPageResponse(reports, totalPage, currentPage);
+    }
+
+    private ReportSearchResponse convertToReportSearchResponse(Report report) {
+        return new ReportSearchResponse(
+                report.getId(),
+                report.getTitle(),
+                report.getContent(),
+                report.getAnswer(),
+                report.getCreatedDate(),
+                report.getModifiedDate(),
+                report.getUser().getNickname()
+        );
     }
 }
