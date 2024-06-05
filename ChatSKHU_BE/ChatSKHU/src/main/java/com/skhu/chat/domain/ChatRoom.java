@@ -3,9 +3,7 @@ package com.skhu.chat.domain;
 import com.skhu.common.BaseTimeEntity;
 import com.skhu.oauth.domain.User;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,7 +12,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ChatRoom extends BaseTimeEntity {
 
     @Id
