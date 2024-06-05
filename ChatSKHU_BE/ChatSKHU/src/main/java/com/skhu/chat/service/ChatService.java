@@ -57,6 +57,7 @@ public class ChatService {
 			chatResponse.setChatRoomId(chatRoomId);
 			chatRoomRepository.findById(chatRoomId).get().setTitle(chatRequest.getQuestion());
 		}
+		chatResponse.setChatRoomId(chatRoomId);
 
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).get();
 

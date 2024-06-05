@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ReportDto {
 	@Data
@@ -18,6 +19,15 @@ public class ReportDto {
 	    private LocalDateTime createdDate;
 	    private LocalDateTime modifiedDate;
 	    private String nickName;
+	}
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class ReportPageResponse {
+		private List<ReportSearchResponse> reports;
+		private int totalPage;
+		private int currentPage;
 	}
 	
 	@Data
