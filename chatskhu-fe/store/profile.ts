@@ -1,4 +1,6 @@
 import create from 'zustand';
+import { persist, PersistOptions } from 'zustand/middleware';
+
 interface ResponseData {
     id: number;
     email: string;
@@ -13,7 +15,17 @@ interface StoreState {
     setResponseData: (data: ResponseData) => void;
 }
 
-export const userprofile = create<StoreState>((set) => ({
-    responseData: null,
-    setResponseData: (data: ResponseData) => set({ responseData: data }),
-}));
+type MyPersist = (
+    config: (set: any, get: any, api: any) => StoreState,
+    options: PersistOptions<StoreState>
+) => (set: any, get: any, api: any) => StoreState;
+
+export const userprofile = create<StoreState>(
+    (persist as MyPersist)(
+        (set) => ({
+            responseData: null,
+            setResponseData: (data: ResponseData) => set({ responseData: data }),
+        }),
+        { name: 'user-store' }
+    )
+);
