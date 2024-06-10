@@ -6,18 +6,23 @@ import bookmark from '/public/images/icon-bookmark.png';
 import backarrow from '/public/images/left-icon.png';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
+import { userprofile } from '../store/profile';
+import { useRouter } from 'next/router';
 
 const MyPage = () => {
+    const { responseData: userData } = userprofile();
+    const img_url = userData?.imageUrl ?? '';
+    const router = useRouter();
     return (
         <EntireMyPageContainer>
-            <BackArrow>
+            <BackArrow onClick={() => router.push('/main')}>
                 <Image src={backarrow} width={30} height={30} alt="backarrow" />
             </BackArrow>
             <h1>마이페이지</h1>
             <Container>
                 <ImgContainer>
-                    <Image src={kakaoProfileImage} width={85} height={85} alt="mypage" />
-                    <p>김신아</p>
+                    <Image src={img_url} width={85} height={85} alt="mypage" />
+                    <p>{userData?.nickname}</p>
                 </ImgContainer>
                 <FlexContainer>
                     <ItemContainer>
@@ -28,7 +33,7 @@ const MyPage = () => {
                         <Image src={settings} width={40} height={40} alt="bookmark" />
                         <p>설정</p>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer onClick={() => router.push('/mypage/customer_center')}>
                         <Image src={bug} width={40} height={40} alt="bookmark" />
                         <p>버그신고</p>
                     </ItemContainer>
@@ -113,6 +118,7 @@ const ImgContainer = styled.div`
     img {
         border-radius: 100%;
         margin-bottom: 1rem;
+        object-fit: none;
     }
 `;
 const ItemContainer = styled.div`
@@ -160,4 +166,8 @@ const FooterContainer = styled.footer`
 const BackArrow = styled.div`
     align-self: flex-start;
     margin-top: 2rem;
+    cursor: pointer;
+    img {
+        width: fit-content;
+    }
 `;

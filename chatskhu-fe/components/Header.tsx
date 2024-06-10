@@ -4,7 +4,8 @@ import sidebar from '/public/images/sidebar.png';
 import addbutton from '/public/images/addbutton.png';
 import hunsu from '/public/images/hunsu.png';
 import { theme } from '../styles/theme';
-import { useStore } from '../store/\bstore';
+import { useStore } from '../store/store';
+import { useRouter } from 'next/router';
 
 interface Props {
     width?: string;
@@ -16,6 +17,7 @@ interface Props {
 const Header = ({ ...props }: Props) => {
     const img_src = props.src;
     const { isOpen, setIsOpen } = useStore();
+    const router = useRouter();
 
     return (
         <>
@@ -23,12 +25,25 @@ const Header = ({ ...props }: Props) => {
                 {img_src ? (
                     <Image src={hunsu} alt="sidebar_logo" width={40} height={40} />
                 ) : (
-                    <div onClick={() => setIsOpen(!isOpen)}>
+                    <div
+                        onClick={() => {
+                            setIsOpen(!isOpen);
+                        }}
+                    >
                         <Image src={sidebar} alt="sidebar_logo" width={20} height={20} />
                     </div>
                 )}
                 <span>chatSKHU</span>
-                <Image src={addbutton} alt="sidebar_logo" width={20} height={20} />
+                <Image
+                    onClick={() => {
+                        router.push('/main');
+                        setIsOpen(false);
+                    }}
+                    src={addbutton}
+                    alt="sidebar_logo"
+                    width={20}
+                    height={20}
+                />
             </HeaderContainer>
         </>
     );
