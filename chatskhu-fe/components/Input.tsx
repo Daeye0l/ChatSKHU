@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Image from 'next/image';
 import arrowup from '/public/images/arrowup.png';
+import sendbutton from '/public/images/sendbutton.png';
 import { theme } from '../styles/theme';
 import { useRef, useState } from 'react';
 import axios from 'axios';
@@ -8,31 +9,46 @@ import { useRouter } from 'next/router';
 
 const Input = () => {
     const formRef = useRef<HTMLFormElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const router = useRouter();
-    const [me, setMe] = useState('');
-    const [roomId, setRoomId] = useState(-1);
+    const [me, setMe] = useState<string>('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onKeyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMe(e.target.value);
+        // 디버깅을 위한 콘솔 출력
     };
-    //ENTER로 form 제출
+
+    // ENTER로 form 제출
     const onEnterPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
+        if (e.key === 'Enter' && !e.shiftKey && me.length !== 0) {
             e.preventDefault();
-            handleSubmit();
+            if (!isSubmitting) {
+                setIsSubmitting(true);
+                const text = me;
+                await handleSubmit(text);
+                setIsSubmitting(false);
+            }
         }
     };
+
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // 여기에 추가로 하고 싶은 작업을 넣을 수 있습니다.
     };
-    const handleSubmit = async () => {
+
+    const handleSubmit = async (text: string) => {
         const currentUrl = window.location.href;
-        if (currentUrl.endsWith('/main')) {
-            setRoomId(-1);
+
+        let roomId = -1;
+        if (!currentUrl.endsWith('/main')) {
+            const index = currentUrl.lastIndexOf('/');
+            roomId = Number(currentUrl.slice(index + 1, currentUrl.length));
+        }
+
+        try {
             const response = await axios.post(
-                `https://chatskhu.duckdns.org/gpt/chat/${roomId}`,
-                { question: me },
+                `https://chatskhu.duckdns.org/chat/${roomId}`,
+                { question: text },
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -40,12 +56,16 @@ const Input = () => {
                     },
                 }
             );
-            console.log(response);
+            console.log(response.data);
             setMe('');
-            setRoomId(response.data.id);
-            router.push(`/c/${roomId}`, roomId.toString());
+            router.push({
+                pathname: `/c/${response.data.chatRoomId}`,
+            });
+        } catch (error) {
+            console.log(error);
         }
     };
+
     return (
         <Footer>
             <InputContainer ref={formRef} onSubmit={onSubmit}>
@@ -54,8 +74,9 @@ const Input = () => {
                     onKeyDown={onEnterPress}
                     onChange={onKeyChange}
                     value={me}
+                    ref={textareaRef}
                 />
-                <Image src={arrowup} alt="입력전_화살표" width={30} height={30} />
+                <Image src={me ? sendbutton : arrowup} alt="입력전_화살표" width={30} height={30} />
             </InputContainer>
         </Footer>
     );
@@ -69,6 +90,7 @@ const Footer = styled.footer`
     display: flex;
     justify-content: center;
 `;
+
 const InputContainer = styled.form`
     width: 95%;
     padding: 0.7em;
