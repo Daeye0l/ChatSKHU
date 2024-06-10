@@ -1,6 +1,6 @@
-import "../styles/globals.css";
-import { createGlobalStyle } from "styled-components";
-import type { AppProps } from "next/app";
+import '../styles/globals.css';
+import { createGlobalStyle } from 'styled-components';
+import type { AppProps } from 'next/app';
 
 const GlobalStyle = createGlobalStyle`
   #__next {
@@ -14,11 +14,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+require('dotenv').config();
+
 export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <GlobalStyle />
-      <Component {...pageProps} />
-    </>
-  );
+    return (
+        <>
+            <GlobalStyle />
+            <Component {...pageProps} />
+        </>
+    );
 }

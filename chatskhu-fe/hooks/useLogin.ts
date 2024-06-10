@@ -23,7 +23,6 @@ const useKaKaoToken = () => {
             const res = await axios.post('https://chatskhu.duckdns.org/oauth/kakao/login', {
                 accessToken: data,
             });
-            console.log(res);
 
             if (res.status === 200) {
                 localStorage.setItem('accessToken', res.data.accessToken);
