@@ -4,16 +4,32 @@ import styled from 'styled-components';
 import Input from '../components/Input';
 import Layout from '../components/layout/Layout';
 import Sidebar from '../components/Sidebar';
-import { useStore } from '../store/\bstore';
+import { useStore } from '../store/store';
 import FAQ from '../components/FAQ';
-
 import { motion } from 'framer-motion';
-import Conversation from '../components/Conversation';
-import useConversationList from '../hooks/useConversationList';
+import useChatList from '../hooks/useChatList';
+import { useList } from '../store/conversationstore';
+import { useEffect } from 'react';
+import useProfile from '../hooks/useProfile';
+import { userprofile } from '../store/profile';
 
 const Main = () => {
     const { isOpen } = useStore();
-    const [list] = useConversationList();
+    const { responseData, setResponseData } = useList();
+
+    const [chatList] = useChatList();
+    const [info] = useProfile();
+    const { responseData: userresponse, setResponseData: setUserResponse } = userprofile();
+
+    useEffect(() => {
+        if (chatList) {
+            setResponseData(chatList);
+        }
+
+        if (info) {
+            setUserResponse(info);
+        }
+    }, [chatList, setResponseData, info]);
 
     const container = {
         hidden: { opacity: 1, scale: 0 },
@@ -59,8 +75,10 @@ const Main = () => {
 export default Main;
 const EntireContainer = styled.div`
     width: 100%;
-    height: 100%;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 `;
 const Presentation = styled.div`
     display: flex;
