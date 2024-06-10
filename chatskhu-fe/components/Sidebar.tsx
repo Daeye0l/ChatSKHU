@@ -5,13 +5,28 @@ import Image from 'next/image';
 import closebutton from '/public/images/closebutton.png';
 import kakaoProfileImage from '/public/images/kakaoprofileimage.png';
 import { theme } from '../styles/theme';
-import { useStore } from '../store/\bstore';
+import { useStore } from '../store/store';
 import { motion, AnimatePresence } from 'framer-motion';
 import QnA from './QnA';
+import { useList } from '../store/conversationstore';
+import { useRouter } from 'next/router';
+import { userprofile } from '../store/profile';
 
-const SidebarComponent = () => {
+const Sidebar = () => {
     const { setIsOpen } = useStore();
+    const { responseData } = useList();
+    const { responseData: userData } = userprofile();
+    const todayChats = responseData?.today || [];
+    const yesterdayChats = responseData?.yesterday || [];
+    const weekChats = responseData?.week || [];
+    const monthChats = responseData?.month || [];
+    const router = useRouter();
+    const img_url = userData?.imageUrl ?? '';
 
+    const clickHandler = () => {
+        setIsOpen(false);
+        router.push('/mypage/info');
+    };
     return (
         <Container>
             <SideBarContainer>
@@ -19,17 +34,16 @@ const SidebarComponent = () => {
                     <div>
                         <Header width="100%" border="none" padding="0.8rem 0em" src="hunsu" position="sticky" />
                         <nav>
-                            <QnA month={'Today'} />
-                            <QnA month={'Previous 7 Days'} />
-                            <QnA month={'Previous 30 Days'} />
-                            <QnA month={'April'} />
-                            <QnA month={'March'} />
+                            <QnA month={'Today'} chat={todayChats} />
+                            <QnA month={'Yesterday'} chat={yesterdayChats} />
+                            <QnA month={'Week'} chat={weekChats} />
+                            <QnA month={'Month'} chat={monthChats} />
                         </nav>
                     </div>
                     <SideBarFooter>
-                        <div>
-                            <Image src={kakaoProfileImage} width={40} height={40} alt="kakaoImageProfile" />
-                            <p>sina</p>
+                        <div onClick={clickHandler}>
+                            <Image src={img_url} width={40} height={40} alt="kakaoImageProfile" />
+                            <p>{userData?.nickname}</p>
                         </div>
                     </SideBarFooter>
                 </SideBar>
@@ -50,7 +64,7 @@ const SidebarComponent = () => {
         </Container>
     );
 };
-export default SidebarComponent;
+export default Sidebar;
 
 const Container = styled.div`
     width: 100%;
@@ -132,6 +146,7 @@ const SideBarFooter = styled.footer`
     }
     div img {
         border-radius: 100%;
+        object-fit: none;
     }
     position: sticky;
     bottom: 0;

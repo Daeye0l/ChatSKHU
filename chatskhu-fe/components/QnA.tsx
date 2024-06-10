@@ -1,23 +1,40 @@
 import styled from 'styled-components';
-import { useStore } from '../store/\bstore';
+import { useStore } from '../store/store';
+import { useRouter } from 'next/router';
+import React, { useMemo } from 'react';
 
+interface Item {
+    id: number;
+    title: string;
+    userId: number;
+}
 interface Props {
     month: string;
+    chat: Item[];
 }
-const QnA = ({ month }: Props) => {
+const QnA = ({ month, chat }: Props) => {
     const { setIsOpen } = useStore();
+    const router = useRouter();
+    const day = chat.length ? month : '';
+    const reversedList = useMemo(() => [...chat].reverse(), [chat]);
     return (
         <QnAContainer>
-            <DateStyle>{month}</DateStyle>
-            {
-                <ConversationList onClick={(prev) => setIsOpen(!prev)}>
-                    <li>쿡쿡fdsafsjalkfjsalkfdjsklafjslkajflkfdsafdsafkldsajfksjflksjaflkjasljfljsafjkjalfja</li>
+            {day && <DateStyle>{month}</DateStyle>}
+            {reversedList.map((item) => (
+                <ConversationList
+                    onClick={(prev) => {
+                        setIsOpen(!prev);
+                        router.push(`/c/${item.id}`);
+                    }}
+                    key={item.id}
+                >
+                    <li>{item.title}</li>
                 </ConversationList>
-            }
+            ))}
         </QnAContainer>
     );
 };
-export default QnA;
+export default React.memo(QnA);
 
 const QnAContainer = styled.div`
     margin-top: 1.25rem;
