@@ -26,6 +26,7 @@ public class BookmarkService {
     public ChatDto.ChatSearchResponse Bookmark(Long chatId, String email) {
         Chat chat = chatRepository.findById(chatId).orElseThrow();
         User user = userRepository.findByEmail(email).orElseThrow();
+        boolean isBookmarked = false;
 
         if (bookmarkRepository.findByUserAndChat(user, chat).isEmpty()) {
             bookmarkRepository.save(Bookmark.builder()
@@ -33,11 +34,12 @@ public class BookmarkService {
                     .chat(chat)
                     .status(true)
                     .build());
+            isBookmarked = true;
         } else {
             bookmarkRepository.deleteByUserAndChat(user, chat);
         }
 
-        return ChatDto.ChatSearchResponse.of(chat);
+        return ChatDto.ChatSearchResponse.of(chat, isBookmarked);
     }
 
     @Transactional
@@ -46,12 +48,15 @@ public class BookmarkService {
         List<Bookmark> bookmarks = bookmarkRepository.findByUser(user);
 
         return bookmarks.stream().map(bookmark -> {
-            ChatDto.ChatSearchResponse chatSearchResponse = new ChatDto.ChatSearchResponse();
-            chatSearchResponse.setId(bookmark.getChat().getId());
-            chatSearchResponse.setQuestion(bookmark.getChat().getQuestion());
-            chatSearchResponse.setAnswer(bookmark.getChat().getAnswer());
-            chatSearchResponse.setCreatedDate(bookmark.getChat().getCreatedDate());
-            return chatSearchResponse;
+            Chat chat = bookmark.getChat();
+            return ChatDto.ChatSearchResponse.of(chat, true);
         }).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public boolean isChatBookmarkedByUser(Long chatId, String email) {
+        Chat chat = chatRepository.findById(chatId).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow();
+        return bookmarkRepository.findByUserAndChat(user, chat).isPresent();
     }
 }
