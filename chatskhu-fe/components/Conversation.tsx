@@ -8,6 +8,7 @@ interface ChatList {
     answer: string;
     createdDate: Date;
     chatRoomId: number;
+    bookmarked: boolean;
 }
 interface Props {
     list: ChatList[];
@@ -20,7 +21,7 @@ const Conversation = ({ list }: Props) => {
             {reversedList.map((item, idx) => (
                 <div key={item.id}>
                     <MyConver message={item.question} />
-                    <AiResponse message={item.answer} />
+                    <AiResponse item={item} />
                 </div>
             ))}
         </ConversationContainer>
