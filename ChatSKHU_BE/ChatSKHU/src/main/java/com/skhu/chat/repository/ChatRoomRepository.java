@@ -12,6 +12,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
     @Query("SELECT cr FROM ChatRoom cr WHERE cr.user = :user AND cr.modifiedDate >= :startDate AND cr.modifiedDate < :endDate")
     List<ChatRoom> findChatRoomByUserAndModifiedDate(User user, LocalDateTime startDate, LocalDateTime endDate);
-
+    @Query("SELECT cr FROM ChatRoom cr WHERE cr.user = :user AND cr.modifiedDate < :startDate")
+    List<ChatRoom> findChatRoomByUserAndOtherDate(User user, LocalDateTime startDate);
 
 }
