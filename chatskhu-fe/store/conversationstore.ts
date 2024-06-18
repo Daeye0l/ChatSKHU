@@ -1,4 +1,5 @@
 import create from 'zustand';
+import { persist, PersistOptions } from 'zustand/middleware';
 
 interface Item {
     id: number;
@@ -18,7 +19,20 @@ interface StoreState {
     setResponseData: (data: ResponseData) => void;
 }
 
-export const useList = create<StoreState>((set) => ({
-    responseData: null,
-    setResponseData: (data: ResponseData) => set({ responseData: data }),
-}));
+type MyPersist = (
+    config: (set: any, get: any, api: any) => StoreState,
+    options: PersistOptions<StoreState>
+) => (set: any, get: any, api: any) => StoreState;
+
+export const useList = create<StoreState>(
+    (persist as MyPersist)(
+        (set) => ({
+            responseData: null,
+            setResponseData: (data: ResponseData) => set({ responseData: data }),
+        }),
+        {
+            name: 'response-data-storage', // 로컬 스토리지에 저장될 이름
+            getStorage: () => localStorage, // 기본적으로 로컬 스토리지를 사용하도록 설정
+        }
+    )
+);
