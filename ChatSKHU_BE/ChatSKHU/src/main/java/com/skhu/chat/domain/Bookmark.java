@@ -21,7 +21,7 @@ public class Bookmark {
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "CHAT_ID")
     private Chat chat;
 
