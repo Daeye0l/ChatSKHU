@@ -4,44 +4,59 @@ import arrowup from '/public/images/arrowup.png';
 import sendbutton from '/public/images/sendbutton.png';
 import { theme } from '../styles/theme';
 import { useRef, useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import { useStateStore } from '../store/submitting';
 
-const Input = () => {
-    const formRef = useRef<HTMLFormElement>(null);
+interface Props {
+    handleSubmit?: (text: string) => void;
+    onpostHandler?: (text: string) => void;
+    onClient?: (value: string) => void;
+    onConversation?: () => void;
+    onSetLoading?: (bool: boolean) => void;
+    onSetTrigger?: () => void;
+}
+
+const Input = ({
+    handleSubmit: onRequestRoomId,
+    onpostHandler,
+    onClient,
+    onConversation,
+    onSetLoading,
+    onSetTrigger,
+}: Props) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const router = useRouter();
     const [me, setMe] = useState<string>('');
-    const { isSubmitting, setIsSubmitting } = useStateStore();
 
     const onKeyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMe(e.target.value);
-        // 디버깅을 위한 콘솔 출력
+        if (onClient) onClient(e.target.value);
+    };
+
+    const onClickHandler = () => {
+        if (onSetLoading) onSetLoading(true);
+        let chatRoom = 0;
+        if (typeof window !== 'undefined') {
+            const currentUrl = window.location.href;
+            const index = currentUrl.lastIndexOf('/');
+            chatRoom = Number(currentUrl.slice(index + 1, currentUrl.length));
+        }
+        if (chatRoom > 0) {
+            if (onpostHandler) onpostHandler(me);
+        } else {
+            if (onRequestRoomId) onRequestRoomId(me);
+        }
+        if (onConversation) onConversation();
+        if (onClient) onClient('');
+        if (textareaRef.current) {
+            textareaRef.current.value = ''; // ref를 사용하여 textarea 값 비우기
+        }
+        setMe(''); // 상태도 비워줍니다.
+        onSetTrigger ? onSetTrigger() : '';
     };
 
     // ENTER로 form 제출
     const onEnterPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey && me.length !== 0) {
             e.preventDefault();
-            if (!isSubmitting) {
-                setIsSubmitting(true);
-                console.log(isSubmitting);
-                const text = me;
-                clearTextarea();
-                await handleSubmit(text);
-                setIsSubmitting(false);
-            }
-        }
-    };
-
-    const onClickHandler = async () => {
-        if (!isSubmitting) {
-            setIsSubmitting(true);
-            const text = me;
-            clearTextarea();
-            await handleSubmit(text);
-            setIsSubmitting(false);
+            onClickHandler();
         }
     };
 
@@ -49,44 +64,9 @@ const Input = () => {
         e.preventDefault();
     };
 
-    const clearTextarea = () => {
-        setMe(''); // 상태값을 비워서 textarea의 value를 빈칸으로 만듭니다.
-        if (textareaRef.current) {
-            textareaRef.current.value = ''; // ref를 통해 직접 textarea의 value를 빈칸으로 만듭니다.
-        }
-    };
-
-    const handleSubmit = async (text: string) => {
-        const currentUrl = window.location.href;
-        let roomId = -1;
-        if (!currentUrl.endsWith('/main')) {
-            const index = currentUrl.lastIndexOf('/');
-            roomId = Number(currentUrl.slice(index + 1, currentUrl.length));
-        }
-
-        try {
-            const response = await axios.post(
-                `https://chatskhu.duckdns.org/chat/${roomId}`,
-                { question: text },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            router.push({
-                pathname: `/c/${response.data.chatRoomId}`,
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
     return (
         <Footer>
-            <InputContainer ref={formRef} onSubmit={onSubmit}>
+            <InputContainer onSubmit={onSubmit}>
                 <textarea
                     placeholder="궁금한 점을 입력해주세요..."
                     onKeyDown={onEnterPress}

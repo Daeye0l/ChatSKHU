@@ -18,11 +18,9 @@ const CreateIndex = () => {
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(event.target.value);
-        console.log(title);
     };
     const textareaChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(event.target.value);
-        console.log(content);
     };
     const onClickHandler = async () => {
         if (!title.length && !content.length) {
@@ -64,7 +62,6 @@ const CreateIndex = () => {
                         },
                     }
                 );
-                console.log(response);
             } catch (error) {
                 console.log('error: ', error);
             }

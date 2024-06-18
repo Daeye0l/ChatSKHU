@@ -24,7 +24,7 @@ const ListItem = ({ id, title: itemTitle, onDeleteHandler }: Props) => {
     const [show, setShow] = useState(false);
     const router = useRouter();
     const { setIsOpen } = useStore();
-    const { responseData, setResponseData } = useList();
+    const { setResponseData } = useList();
     const [chatList, setChatList] = useChatList();
 
     const onUpdateHandler = async (e: React.FormEvent<HTMLFormElement>, chatRoomId: number) => {

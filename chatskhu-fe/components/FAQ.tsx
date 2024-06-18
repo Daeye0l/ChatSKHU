@@ -41,7 +41,7 @@ const handleSubmit = async (text: string) => {
                 },
             }
         );
-        console.log(response.data);
+
         router.push({
             pathname: `/c/${response.data.chatRoomId}`,
         });

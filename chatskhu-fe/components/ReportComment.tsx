@@ -42,7 +42,6 @@ const ReportComment = ({ id }: ReportCommentProps) => {
                     },
                 }
             );
-            console.log(response);
             setComment('');
             getCommentHandler();
         } catch (e) {
@@ -59,7 +58,6 @@ const ReportComment = ({ id }: ReportCommentProps) => {
                 },
             });
             setGetcomment(response.data);
-            console.log(response.data);
         } catch (e) {
             console.error(e);
         }
