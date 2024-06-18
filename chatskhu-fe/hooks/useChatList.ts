@@ -1,21 +1,24 @@
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
-interface Date {
+interface ChatItem {
     id: number;
     title: string;
     userId: number;
 }
-interface Props {
-    today: Date[];
-    yesterday: Date[];
-    week: Date[];
-    month: Date[];
-}
-const useChatList = () => {
-    const [chatList, setChatList] = useState<Props>();
 
-    const myChatList = useCallback(async () => {
+interface ChatListProps {
+    today: ChatItem[];
+    yesterday: ChatItem[];
+    week: ChatItem[];
+    month: ChatItem[];
+    other: ChatItem[];
+}
+
+const useChatList = (): [ChatListProps | undefined, () => Promise<void>] => {
+    const [chatList, setChatList] = useState<ChatListProps | undefined>(undefined);
+
+    const fetchChatList = useCallback(async () => {
         try {
             const response = await axios.get('https://chatskhu.duckdns.org/chat/chatroom', {
                 headers: {
@@ -23,15 +26,17 @@ const useChatList = () => {
                     'Content-Type': 'application/json',
                 },
             });
-
             setChatList(response.data);
-        } catch (error) {}
+        } catch (error) {
+            console.error('Failed to fetch chat list', error);
+        }
     }, []);
 
     useEffect(() => {
-        myChatList();
-    }, []);
+        fetchChatList();
+    }, [fetchChatList]);
 
-    return [chatList];
+    return [chatList, fetchChatList];
 };
+
 export default useChatList;

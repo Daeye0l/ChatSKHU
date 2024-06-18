@@ -12,6 +12,7 @@ interface ResponseData {
     yesterday: Item[];
     week: Item[];
     month: Item[];
+    other: Item[];
 }
 
 interface StoreState {

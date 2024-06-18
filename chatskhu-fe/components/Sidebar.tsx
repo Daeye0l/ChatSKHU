@@ -19,6 +19,7 @@ const Sidebar = () => {
     const yesterdayChats = responseData?.yesterday || [];
     const weekChats = responseData?.week || [];
     const monthChats = responseData?.month || [];
+    const otherChats = responseData?.other || [];
     const router = useRouter();
     const img_url = userData?.imageUrl ?? '';
 
@@ -44,6 +45,7 @@ const Sidebar = () => {
                             <QnA month={'Yesterday'} chat={yesterdayChats} />
                             <QnA month={'Week'} chat={weekChats} />
                             <QnA month={'Month'} chat={monthChats} />
+                            <QnA month={'Other'} chat={otherChats} />
                         </nav>
                     </div>
                     <SideBarFooter>
