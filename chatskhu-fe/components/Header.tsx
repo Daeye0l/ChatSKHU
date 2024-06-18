@@ -33,7 +33,7 @@ const Header = ({ ...props }: Props) => {
                         <Image src={sidebar} alt="sidebar_logo" width={20} height={20} />
                     </div>
                 )}
-                <span>chatSKHU</span>
+                <span>ChatSKHU</span>
                 <Image
                     onClick={() => {
                         router.push('/main');
