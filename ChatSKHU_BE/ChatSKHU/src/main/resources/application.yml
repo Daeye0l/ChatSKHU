@@ -40,11 +40,6 @@ oauth:
   kakao:
     rest-api-key: ${KAKAO_REST_API_KEY}
     redirect-url: ${KAKAO_REDIRECT_URL}
-  google:
-    client-id: ${GOOGLE_CLIENT_ID}
-    client-secret: ${GOOGLE_CLIENT_SECRET}
-    redirect-url: ${GOOGLE_REDIRECT_URL}
-
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS}
  
