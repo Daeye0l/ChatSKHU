@@ -4,15 +4,18 @@ import MypageLayout from '../../../../components/layout/MypageLayout';
 import { styled } from 'styled-components';
 import { useState } from 'react';
 import ReportComment from '../../../../components/ReportComment';
-import { userprofile } from '../../../../store/profile';
 
 const Index = () => {
     const router = useRouter();
     const { title, content, id } = router.query;
 
-    const idString = typeof id === 'string' ? id : '';
+    const idNumber = typeof id === 'string' ? Number(id) : NaN;
 
     const onDeleteHandler = async () => {
+        if (isNaN(idNumber)) {
+            alert('Invalid ID');
+            return;
+        }
         try {
             const response = await axios.delete(`https://chatskhu.duckdns.org/report/${id}`, {
                 headers: {
@@ -42,7 +45,7 @@ const Index = () => {
                 <button onClick={onDeleteHandler}>삭제</button>
             </Container>
             <Container>
-                <ReportComment id={idString} />
+                <ReportComment id={idNumber} />
             </Container>
         </MypageLayout>
     );

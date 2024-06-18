@@ -11,7 +11,7 @@ interface MyObject {
     [key: string]: string;
     북마크: string;
     프로필: string;
-    버그신고: string;
+    문의: string;
 }
 
 const IconComponent = (props: Props) => {
@@ -20,7 +20,7 @@ const IconComponent = (props: Props) => {
     const routerArray: MyObject = {
         북마크: '/mypage/bookmark',
         프로필: '/mypage/profile',
-        버그신고: '/mypage/customer_center',
+        문의: '/mypage/customer_center',
     };
     const onClick = () => {
         router.push(routerArray[alt]);

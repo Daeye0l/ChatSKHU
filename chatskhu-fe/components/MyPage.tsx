@@ -25,7 +25,7 @@ const MyPage = () => {
                 <FlexContainer>
                     <IconComponent src={bookmark} alt={'북마크'} />
                     <IconComponent src={profile} alt={'프로필'} />
-                    <IconComponent src={bug} alt={'버그신고'} />
+                    <IconComponent src={bug} alt={'문의'} />
                 </FlexContainer>
             </Container>
             <FooterContainer>

@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 import useProfile from '../hooks/useProfile';
 
 interface ReportCommentProps {
-    id: string;
+    id: number;
 }
 interface CommentProps {
     answer: string;
@@ -42,6 +42,7 @@ const ReportComment = ({ id }: ReportCommentProps) => {
                     },
                 }
             );
+            console.log(response);
             setComment('');
             getCommentHandler();
         } catch (e) {

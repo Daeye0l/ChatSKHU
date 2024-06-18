@@ -20,7 +20,15 @@ const Profile = () => {
         setName(e.target.value);
     };
 
-    const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmitHandler = () => {
+        const formElement = document.querySelector('form');
+        if (formElement) {
+            const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+            formElement.dispatchEvent(submitEvent);
+        }
+    };
+
+    const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!name) {
             alert('닉네임을 한 자 이상 입력해주세요.');
@@ -53,7 +61,7 @@ const Profile = () => {
                 alert('업데이트 중 오류가 발생했습니다.');
             }
         },
-        [setResponseData]
+        [setResponseData, router]
     );
 
     return (
@@ -62,13 +70,13 @@ const Profile = () => {
                 <ImgContainer>
                     <Image src={img_url} width={85} height={85} alt="mypage" />
                 </ImgContainer>
-                <form onSubmit={onSubmitHandler}>
+                <form onSubmit={onFormSubmit}>
                     <InputContainer>
                         <label>닉네임</label>
                         <input value={name} onChange={onChangeHandler} maxLength={5} />
                         {name === '' && <AlertCss>닉네임을 입력해주세요!</AlertCss>}
                     </InputContainer>
-                    <MypageButton nickname={name.length} />
+                    <MypageButton nickname={name.length} onNickNameHandler={onSubmitHandler} />
                 </form>
             </ProfileContainer>
         </MypageLayout>
