@@ -24,9 +24,7 @@ const useProfile = () => {
 
             userprofile.getState().setResponseData(response.data);
             setProfile(response.data);
-        } catch (error) {
-            console.log('error: ', error);
-        }
+        } catch (error) {}
     }, []);
 
     useEffect(() => {
