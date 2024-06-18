@@ -5,7 +5,6 @@ import Conversation from '../../components/Conversation';
 import useConversationList from '../../hooks/useConversationList';
 import { useStore } from '../../store/store';
 import Sidebar from '../../components/Sidebar';
-import { useEffect } from 'react';
 
 const chat = () => {
     const { isOpen } = useStore();
