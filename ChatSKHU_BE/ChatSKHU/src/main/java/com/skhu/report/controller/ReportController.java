@@ -4,6 +4,7 @@ import com.skhu.report.dto.ReportDto;
 import com.skhu.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +48,10 @@ public class ReportController {
 	@GetMapping("/all")
 	public ResponseEntity<ReportDto.ReportPageResponse> allReportList(@RequestParam(value = "pg", defaultValue = "1") int pg, @RequestParam(value = "sz", defaultValue = "9") int sz) {
 		return ResponseEntity.ok(reportService.findAll(pg, sz));
+	}
+
+	@GetMapping("/answer/{reportId}")
+	public ResponseEntity<ReportDto.ReportAnswerResponse> getAnswer(@PathVariable("reportId") Long reportId){
+		return ResponseEntity.ok(reportService.getAnswer(reportId));
 	}
 }

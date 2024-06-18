@@ -1,6 +1,7 @@
 package com.skhu.report.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +37,14 @@ public class ReportDto {
 	public static class ReportSaveRequest {
 		private String title;
 		private String content;
+	}
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
+	public static class ReportAnswerResponse {
+		private String answer;
 	}
 	
 	@Data
