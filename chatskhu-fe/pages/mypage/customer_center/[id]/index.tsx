@@ -4,10 +4,12 @@ import MypageLayout from '../../../../components/layout/MypageLayout';
 import { styled } from 'styled-components';
 import { useState } from 'react';
 import ReportComment from '../../../../components/ReportComment';
+import { userprofile } from '../../../../store/profile';
 
 const index = () => {
     const router = useRouter();
     const { title, content, id } = router.query;
+    const { responseData } = userprofile();
     const idString = typeof id === 'string' ? id : '';
 
     const onDeleteHandler = async () => {
@@ -39,9 +41,7 @@ const index = () => {
                 <button onClick={onUpdateHandler}>수정</button>
                 <button onClick={onDeleteHandler}>삭제</button>
             </Container>
-            <Container>
-                <ReportComment id={idString} />
-            </Container>
+            <Container>{responseData?.userRole !== 'ROLE_USER' && <ReportComment id={idString} />}</Container>
         </MypageLayout>
     );
 };
