@@ -8,25 +8,27 @@ import axios from 'axios';
 
 const Profile = () => {
     const { responseData: userData, setResponseData } = userprofile();
-    const [name, setName] = useState(userData!.nickname);
+    const [name, setName] = useState(userData?.nickname ?? '');
     const img_url = userData?.imageUrl ?? '';
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
     };
+
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!name) {
+            alert('닉네임을 한 자 이상 입력해주세요.');
+            return;
+        }
         if (userData) {
             setResponseData({ ...userData, nickname: name });
-        }
-        if (name?.length !== 0) {
             onInfoChange(name);
-        } else {
-            alert('닉네임을 한 자 이상 입력해주세요.');
         }
     };
+
     const onInfoChange = useCallback(
-        async (userName: any) => {
+        async (userName: string) => {
             try {
                 const response = await axios.post(
                     'https://chatskhu.duckdns.org/user/update',
@@ -41,7 +43,8 @@ const Profile = () => {
                 console.log(response.data);
                 setResponseData(response.data);
             } catch (error) {
-                console.log('error: ', error);
+                console.error('Error updating user info:', error);
+                alert('업데이트 중 오류가 발생했습니다.');
             }
         },
         [setResponseData]
@@ -54,19 +57,18 @@ const Profile = () => {
                     <Image src={img_url} width={85} height={85} alt="mypage" />
                 </ImgContainer>
                 <form onSubmit={onSubmitHandler}>
-                    <div>
-                        <InputContainer>
-                            <label>닉네임</label>
-                            <input value={name} onChange={onChangeHandler} maxLength={5} />
-                            {name === '' && <AlertCss>닉네임을 입력해주세요!</AlertCss>}
-                        </InputContainer>
-                    </div>
+                    <InputContainer>
+                        <label>닉네임</label>
+                        <input value={name} onChange={onChangeHandler} maxLength={5} />
+                        {name === '' && <AlertCss>닉네임을 입력해주세요!</AlertCss>}
+                    </InputContainer>
                     <MypageButton nickname={name.length} />
                 </form>
             </ProfileContainer>
         </MypageLayout>
     );
 };
+
 export default Profile;
 
 const ImgContainer = styled.div`
