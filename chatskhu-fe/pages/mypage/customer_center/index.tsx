@@ -15,7 +15,6 @@ const CoutomerCenter = () => {
     };
 
     const handlePageClick = (event: { selected: number }) => {
-        console.log(event);
         const selectedPage = event.selected + 1; // selected는 0부터 시작하므로 +1
         setPage(selectedPage);
     };
