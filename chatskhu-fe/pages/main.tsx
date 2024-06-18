@@ -38,7 +38,7 @@ const Main = () => {
         if (info) {
             setUserResponse(info);
         }
-    }, [chatList, setResponseData, info]);
+    }, [chatList, setResponseData, info, setUserResponse]);
 
     const container = {
         hidden: { opacity: 1, scale: 0 },

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import ReportComment from '../../../../components/ReportComment';
 import { userprofile } from '../../../../store/profile';
 
-const index = () => {
+const Index = () => {
     const router = useRouter();
     const { title, content, id } = router.query;
     const { responseData } = userprofile();
@@ -45,7 +45,7 @@ const index = () => {
         </MypageLayout>
     );
 };
-export default index;
+export default Index;
 
 const Container = styled.div`
     width: 100%;
