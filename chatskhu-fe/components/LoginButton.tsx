@@ -3,12 +3,15 @@ import Image from 'next/image';
 import useLogin from '../hooks/useLogin';
 
 const LoginButton = () => {
-    const kakao = process.env.NEXT_PUBLIC_KAKA0_AUTH_URL!;
+    const clientId = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
+    const redirectUri = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
 
     return (
         <KaKaoButtonStyled
             onClick={() => {
-                window.location.href = kakao;
+                window.location.href = kakaoAuthUrl;
             }}
         >
             <Image src="/images/chat.png" alt="chat_image" width={24} height={24} />
