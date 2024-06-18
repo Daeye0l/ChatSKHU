@@ -6,7 +6,7 @@ import useConversationList from '../../hooks/useConversationList';
 import { useStore } from '../../store/store';
 import Sidebar from '../../components/Sidebar';
 
-const chat = () => {
+const Chat = () => {
     const { isOpen } = useStore();
     var chatRoom = 0;
     if (typeof window !== 'undefined') {
@@ -26,7 +26,7 @@ const chat = () => {
         </Layout>
     );
 };
-export default chat;
+export default Chat;
 
 const EntireContainer = styled.div`
     width: 100%;

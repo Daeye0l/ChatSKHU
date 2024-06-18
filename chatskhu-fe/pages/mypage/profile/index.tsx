@@ -25,24 +25,27 @@ const Profile = () => {
             alert('닉네임을 한 자 이상 입력해주세요.');
         }
     };
-    const onInfoChange = useCallback(async (userName: any) => {
-        try {
-            const response = await axios.post(
-                'https://chatskhu.duckdns.org/user/update',
-                { nickname: userName },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            console.log(response.data);
-            setResponseData(response.data);
-        } catch (error) {
-            console.log('error: ', error);
-        }
-    }, []);
+    const onInfoChange = useCallback(
+        async (userName: any) => {
+            try {
+                const response = await axios.post(
+                    'https://chatskhu.duckdns.org/user/update',
+                    { nickname: userName },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                console.log(response.data);
+                setResponseData(response.data);
+            } catch (error) {
+                console.log('error: ', error);
+            }
+        },
+        [setResponseData]
+    );
 
     return (
         <MypageLayout pagename="프로필">
