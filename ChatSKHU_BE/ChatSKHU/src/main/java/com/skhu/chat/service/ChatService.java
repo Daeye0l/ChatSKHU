@@ -41,7 +41,7 @@ public class ChatService {
 
 		User user = userRepository.findByEmail(email).orElseThrow();
 		FlaskResponse flaskResponse = getPrompt(chatRequest.getQuestion());
-		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 256);
+		GPTRequest gptRequest = new GPTRequest(model, flaskResponse.getPrompt(), 1000);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + apiKey);
