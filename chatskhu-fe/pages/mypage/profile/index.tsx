@@ -1,15 +1,18 @@
 import { styled } from 'styled-components';
 import MypageLayout from '../../../components/layout/MypageLayout';
 import { userprofile } from '../../../store/profile';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import MypageButton from '../../../components/MypageButton';
 import { useCallback, useState } from 'react';
 import axios from 'axios';
+import defaultProfile from '/public/images/profileIMG.png';
 
 const Profile = () => {
     const { responseData: userData, setResponseData } = userprofile();
     const [name, setName] = useState(userData?.nickname ?? '');
-    const img_url = userData?.imageUrl ?? '';
+    const img_url: string | StaticImageData = userData?.imageUrl?.includes('default')
+        ? defaultProfile
+        : userData?.imageUrl || defaultProfile;
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);

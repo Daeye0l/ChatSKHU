@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import bug from '/public/images/icon-siren.png';
 import profile from '/public/images/profile.png';
 import bookmark from '/public/images/icon-bookmark.png';
@@ -8,10 +8,13 @@ import { theme } from '../styles/theme';
 import { userprofile } from '../store/profile';
 import IconComponent from './IconComponent';
 import MypageLayout from './layout/MypageLayout';
+import defaultProfile from '/public/images/profileIMG.png';
 
 const MyPage = () => {
     const { responseData: userData } = userprofile();
-    const img_url = userData?.imageUrl ?? '';
+    const img_url: string | StaticImageData = userData?.imageUrl?.includes('default')
+        ? defaultProfile
+        : userData?.imageUrl || defaultProfile;
     return (
         <MypageLayout pagename="마이페이지">
             <Container>
