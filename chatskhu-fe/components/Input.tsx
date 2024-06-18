@@ -6,13 +6,14 @@ import { theme } from '../styles/theme';
 import { useRef, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useStateStore } from '../store/submitting';
 
 const Input = () => {
     const formRef = useRef<HTMLFormElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const router = useRouter();
     const [me, setMe] = useState<string>('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { isSubmitting, setIsSubmitting } = useStateStore();
 
     const onKeyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMe(e.target.value);
@@ -25,10 +26,22 @@ const Input = () => {
             e.preventDefault();
             if (!isSubmitting) {
                 setIsSubmitting(true);
+                console.log(isSubmitting);
                 const text = me;
+                clearTextarea();
                 await handleSubmit(text);
                 setIsSubmitting(false);
             }
+        }
+    };
+
+    const onClickHandler = async () => {
+        if (!isSubmitting) {
+            setIsSubmitting(true);
+            const text = me;
+            clearTextarea();
+            await handleSubmit(text);
+            setIsSubmitting(false);
         }
     };
 
@@ -36,9 +49,15 @@ const Input = () => {
         e.preventDefault();
     };
 
+    const clearTextarea = () => {
+        setMe(''); // 상태값을 비워서 textarea의 value를 빈칸으로 만듭니다.
+        if (textareaRef.current) {
+            textareaRef.current.value = ''; // ref를 통해 직접 textarea의 value를 빈칸으로 만듭니다.
+        }
+    };
+
     const handleSubmit = async (text: string) => {
         const currentUrl = window.location.href;
-
         let roomId = -1;
         if (!currentUrl.endsWith('/main')) {
             const index = currentUrl.lastIndexOf('/');
@@ -56,11 +75,10 @@ const Input = () => {
                     },
                 }
             );
-            console.log(response.data);
-            setMe('');
             router.push({
                 pathname: `/c/${response.data.chatRoomId}`,
             });
+            console.log(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -76,7 +94,13 @@ const Input = () => {
                     value={me}
                     ref={textareaRef}
                 />
-                <Image src={me ? sendbutton : arrowup} alt="입력전_화살표" width={30} height={30} />
+                <Image
+                    src={me ? sendbutton : arrowup}
+                    alt="입력전_화살표"
+                    width={30}
+                    height={30}
+                    onClick={onClickHandler}
+                />
             </InputContainer>
         </Footer>
     );
@@ -97,10 +121,8 @@ const InputContainer = styled.form`
     margin-bottom: 2em;
     display: flex;
     justify-content: space-between;
-
     border: 1px solid ${theme.color.grayColor};
     border-radius: ${theme.InputRadius.radius};
-
     background-color: white;
 
     textarea,
@@ -110,6 +132,7 @@ const InputContainer = styled.form`
         outline: none;
         resize: none;
     }
+
     img {
         cursor: pointer;
     }
