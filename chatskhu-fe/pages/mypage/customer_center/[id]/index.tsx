@@ -23,7 +23,6 @@ const Index = () => {
                     'Content-Type': 'application/json',
                 },
             });
-            console.log(response);
             router.back();
         } catch (e) {
             console.log(e);

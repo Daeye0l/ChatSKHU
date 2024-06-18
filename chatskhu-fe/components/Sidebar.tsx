@@ -78,12 +78,14 @@ const Sidebar = () => {
 export default Sidebar;
 
 const Container = styled.div`
-    width: 100%;
+    width: 390px;
     height: 100vh;
     display: flex;
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
 
     button {
         height: fit-content;

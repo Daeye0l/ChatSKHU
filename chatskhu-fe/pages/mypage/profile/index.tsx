@@ -53,7 +53,7 @@ const Profile = () => {
                         },
                     }
                 );
-                console.log(response.data);
+
                 setResponseData(response.data);
                 router.push('/mypage/info');
             } catch (error) {

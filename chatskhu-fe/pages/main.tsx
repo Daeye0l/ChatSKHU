@@ -9,27 +9,49 @@ import FAQ from '../components/FAQ';
 import { motion } from 'framer-motion';
 import useChatList from '../hooks/useChatList';
 import { useList } from '../store/conversationstore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useProfile from '../hooks/useProfile';
 import { userprofile } from '../store/profile';
-import Spinner from '/public/spinner.svg';
-import { useStateStore } from '../store/submitting';
-
+import router from 'next/router';
+import axios from 'axios';
+import Spinner from '../public/spinner.svg';
 const Main = () => {
     const { isOpen } = useStore();
     const { setResponseData } = useList();
-
     const [chatList] = useChatList();
     const [info] = useProfile();
-    const { isSubmitting } = useStateStore();
     const { setResponseData: setUserResponse } = userprofile();
-
+    const [trigger, setTrigger] = useState(false);
     const contentArray = [
         { id: 0, title: '수강신청 방법', subtitle: '수강신청 방법에 대해서 궁금하신가요?' },
         { id: 1, title: '마이크로전공', subtitle: '마이크로 전공에 대해서 알려드릴까요?' },
         { id: 2, title: '승연관', subtitle: '자세한 건물 정보가 궁금하신가요?' },
     ];
 
+    const onSetTrigger = () => {
+        setTrigger(true);
+    };
+    //input한테 이 함수 전달하기 main이니까 로직 main만 신경쓰기
+    //main에서는 -1로 요청하고 생성된 chatRoomId로 router.push하기
+    const handleSubmit = async (text: string) => {
+        let roomId = -1;
+
+        try {
+            const response = await axios.post(
+                `https://chatskhu.duckdns.org/chat/${roomId}`,
+                { question: text },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            router.push(`/c/${response.data.chatRoomId}`);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     useEffect(() => {
         if (chatList) {
             setResponseData(chatList);
@@ -60,27 +82,29 @@ const Main = () => {
     };
     return (
         <Layout>
-            {isSubmitting ?? (
+            {!trigger && (
+                <EntireContainer>
+                    <Presentation>
+                        <CenterContainer>
+                            <DefaultImg>
+                                <Image src={speechbubble} width={80} height={80} alt="speechbubble" />
+                                <div>무엇이 궁금한가요?</div>
+                            </DefaultImg>
+                            <FAQsContainer initial="hidden" animate="visible" variants={container}>
+                                {contentArray.map((index) => (
+                                    <FAQ key={index.id} variants={item} title={index.title} subtitle={index.subtitle} />
+                                ))}
+                            </FAQsContainer>
+                        </CenterContainer>
+                    </Presentation>
+                </EntireContainer>
+            )}
+            {trigger && (
                 <SpinnerContainer>
                     <Spinner />
                 </SpinnerContainer>
             )}
-            <EntireContainer>
-                <Presentation>
-                    <CenterContainer>
-                        <DefaultImg>
-                            <Image src={speechbubble} width={80} height={80} alt="speechbubble" />
-                            <div>무엇이 궁금한가요?</div>
-                        </DefaultImg>
-                        <FAQsContainer initial="hidden" animate="visible" variants={container}>
-                            {contentArray.map((index) => (
-                                <FAQ key={index.id} variants={item} title={index.title} subtitle={index.subtitle} />
-                            ))}
-                        </FAQsContainer>
-                    </CenterContainer>
-                </Presentation>
-            </EntireContainer>
-            <Input />
+            <Input handleSubmit={handleSubmit} onSetTrigger={onSetTrigger} />
             {isOpen && <Sidebar />}
         </Layout>
     );

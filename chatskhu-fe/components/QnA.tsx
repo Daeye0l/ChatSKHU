@@ -16,7 +16,7 @@ interface Props {
 }
 
 const QnA = ({ month, chat }: Props) => {
-    const { responseData, setResponseData } = useList();
+    const { setResponseData } = useList();
     const [chatList, setChatList] = useChatList();
 
     useEffect(() => {
