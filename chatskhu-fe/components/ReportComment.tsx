@@ -1,10 +1,13 @@
 import axios from 'axios';
-import { setConfig } from 'next/config';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
+import useProfile from '../hooks/useProfile';
 
 interface ReportCommentProps {
     id: string;
+}
+interface CommentProps {
+    answer: string;
 }
 interface ReportComment {
     id: number;
@@ -12,63 +15,78 @@ interface ReportComment {
     content: string;
     answer: string;
 }
-const defaultReportComment: ReportComment[] = [
-    {
-        id: 0,
-        title: '',
-        content: '',
-        answer: '',
-    },
-];
 
+const defaultValue = { answer: '' };
 const ReportComment = ({ id }: ReportCommentProps) => {
     const [comment, setComment] = useState('');
-    const [comments, setComments] = useState<ReportComment[]>(defaultReportComment);
-
+    const [profile] = useProfile();
+    const [getcomment, setGetcomment] = useState<CommentProps>(defaultValue); //댓글 get으로 얻어낸거
     const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setComment(event.target.value);
     };
 
     const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        onClickHandler();
     };
 
     const onClickHandler = async () => {
-        if (comments.length < 0) {
-            try {
-                const response = await axios.put(
-                    `https://chatskhu.duckdns.org/admin/answer/${id}`,
-                    { answer: comment }, // 본문에 answer를 포함한 객체 전달
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-                setComment('');
-                setComments([response.data]); // response.data를 배열로 설정
-                console.log(comments);
-            } catch (e) {
-                console.error(e);
-            }
-        } else {
-            alert('댓글은 한 개 밖에 달지 못해요');
+        try {
+            const response = await axios.put(
+                `https://chatskhu.duckdns.org/admin/answer/${id}`,
+                { answer: comment },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
             setComment('');
+            getCommentHandler();
+        } catch (e) {
+            console.error(e);
         }
     };
 
+    const getCommentHandler = async () => {
+        try {
+            const response = await axios.get(`https://chatskhu.duckdns.org/report/answer/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            setGetcomment(response.data);
+            console.log(response.data);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    useEffect(() => {
+        getCommentHandler();
+    }, [id]);
+
     return (
         <FormContainer onSubmit={onSubmitHandler}>
-            <input type="text" value={comment} onChange={onChangeHandler} />
-            <button type="button" onClick={onClickHandler}>
-                작성
-            </button>
-            <hr></hr>
-            <CommentContainer>
-                {comments.length > 0 && <span>관리자</span>}
-                <p>{comments.length > 0 && comments[0].answer}</p>
-            </CommentContainer>
+            {profile?.userRole !== 'ROLE_USER' && (
+                <div>
+                    <input type="text" value={comment} onChange={onChangeHandler} />
+                    <button type="button" onClick={onClickHandler}>
+                        작성
+                    </button>
+                    <hr></hr>
+                </div>
+            )}
+
+            {getcomment.answer !== null && (
+                <CommentContainer>
+                    <span>답변 : </span>
+                    <p>{getcomment.answer}</p>
+                    <hr />
+                </CommentContainer>
+            )}
         </FormContainer>
     );
 };

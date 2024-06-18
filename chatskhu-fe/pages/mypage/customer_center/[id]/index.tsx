@@ -10,6 +10,7 @@ const Index = () => {
     const router = useRouter();
     const { title, content, id } = router.query;
     const { responseData } = userprofile();
+
     const idString = typeof id === 'string' ? id : '';
 
     const onDeleteHandler = async () => {
@@ -41,7 +42,9 @@ const Index = () => {
                 <button onClick={onUpdateHandler}>수정</button>
                 <button onClick={onDeleteHandler}>삭제</button>
             </Container>
-            <Container>{responseData?.userRole !== 'ROLE_USER' && <ReportComment id={idString} />}</Container>
+            <Container>
+                <ReportComment id={idString} />
+            </Container>
         </MypageLayout>
     );
 };
