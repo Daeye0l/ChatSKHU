@@ -9,7 +9,6 @@ import { userprofile } from '../../../../store/profile';
 const Index = () => {
     const router = useRouter();
     const { title, content, id } = router.query;
-    const { responseData } = userprofile();
 
     const idString = typeof id === 'string' ? id : '';
 

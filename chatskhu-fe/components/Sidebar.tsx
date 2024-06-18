@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Header from './Header';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import closebutton from '/public/images/closebutton.png';
 import { theme } from '../styles/theme';
 import { useStore } from '../store/store';
@@ -10,6 +10,7 @@ import QnA from './QnA';
 import { useList } from '../store/conversationstore';
 import { useRouter } from 'next/router';
 import { userprofile } from '../store/profile';
+import defaultProfile from '/public/images/profileIMG.png';
 
 const Sidebar = () => {
     const { setIsOpen } = useStore();
@@ -21,7 +22,9 @@ const Sidebar = () => {
     const monthChats = responseData?.month || [];
     const otherChats = responseData?.other || [];
     const router = useRouter();
-    const img_url = userData?.imageUrl ?? '';
+    const img_url: string | StaticImageData = userData?.imageUrl?.includes('default')
+        ? defaultProfile
+        : userData?.imageUrl || defaultProfile;
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
