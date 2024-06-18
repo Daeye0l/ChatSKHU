@@ -1,42 +1,28 @@
-import kakaoProfileImage from '/public/images/kakaoprofileimage.png';
 import Image from 'next/image';
 import bug from '/public/images/icon-siren.png';
-import settings from '/public/images/icon-setting.png';
+import profile from '/public/images/profile.png';
 import bookmark from '/public/images/icon-bookmark.png';
-import backarrow from '/public/images/left-icon.png';
+
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
 import { userprofile } from '../store/profile';
-import { useRouter } from 'next/router';
+import IconComponent from './IconComponent';
+import MypageLayout from './layout/MypageLayout';
 
 const MyPage = () => {
     const { responseData: userData } = userprofile();
     const img_url = userData?.imageUrl ?? '';
-    const router = useRouter();
     return (
-        <EntireMyPageContainer>
-            <BackArrow onClick={() => router.push('/main')}>
-                <Image src={backarrow} width={30} height={30} alt="backarrow" />
-            </BackArrow>
-            <h1>마이페이지</h1>
+        <MypageLayout pagename="마이페이지">
             <Container>
                 <ImgContainer>
                     <Image src={img_url} width={85} height={85} alt="mypage" />
                     <p>{userData?.nickname}</p>
                 </ImgContainer>
                 <FlexContainer>
-                    <ItemContainer>
-                        <Image src={bookmark} width={40} height={40} alt="bookmark" />
-                        <p>북마크</p>
-                    </ItemContainer>
-                    <ItemContainer>
-                        <Image src={settings} width={40} height={40} alt="bookmark" />
-                        <p>설정</p>
-                    </ItemContainer>
-                    <ItemContainer onClick={() => router.push('/mypage/customer_center')}>
-                        <Image src={bug} width={40} height={40} alt="bookmark" />
-                        <p>버그신고</p>
-                    </ItemContainer>
+                    <IconComponent src={bookmark} alt={'북마크'} />
+                    <IconComponent src={profile} alt={'프로필'} />
+                    <IconComponent src={bug} alt={'버그신고'} />
                 </FlexContainer>
             </Container>
             <FooterContainer>
@@ -74,22 +60,10 @@ const MyPage = () => {
                     </tbody>
                 </table>
             </FooterContainer>
-        </EntireMyPageContainer>
+        </MypageLayout>
     );
 };
 export default MyPage;
-
-const EntireMyPageContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 100vh;
-
-    h1 {
-        font-size: 1.2rem;
-    }
-`;
 
 const Container = styled.div`
     width: 80%;
@@ -121,21 +95,6 @@ const ImgContainer = styled.div`
         object-fit: none;
     }
 `;
-const ItemContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-
-    justify-content: center;
-    align-items: center;
-
-    img:first-child {
-        margin: 0.6rem;
-    }
-
-    p {
-        font-size: 0.7rem;
-    }
-`;
 
 const FooterContainer = styled.footer`
     width: 100%;
@@ -160,14 +119,5 @@ const FooterContainer = styled.footer`
     thead tr td {
         font-size: 1rem;
         font-weight: 800;
-    }
-`;
-
-const BackArrow = styled.div`
-    align-self: flex-start;
-    margin-top: 2rem;
-    cursor: pointer;
-    img {
-        width: fit-content;
     }
 `;
