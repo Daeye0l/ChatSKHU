@@ -21,9 +21,7 @@ const useQuestion = () => {
                 },
             });
             setQuestion(response.data);
-        } catch (error) {
-            console.log('error :', error);
-        }
+        } catch (error) {}
     };
 
     useEffect(() => {

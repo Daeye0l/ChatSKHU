@@ -29,9 +29,7 @@ const useKaKaoToken = () => {
                 localStorage.setItem('refreshToken', res.data.refreshToken);
                 router.push('/main');
             }
-        } catch (error) {
-            console.log(error);
-        }
+        } catch (error) {}
     }, []);
 
     useEffect(() => {

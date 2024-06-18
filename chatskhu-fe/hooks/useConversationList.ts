@@ -6,6 +6,7 @@ type ListType = {
     answer: string;
     createdDate: Date;
     chatRoomId: number;
+    bookmarked: boolean;
 };
 
 const useConversationList = (chatRoom: number) => {
@@ -20,10 +21,7 @@ const useConversationList = (chatRoom: number) => {
                 },
             });
             setList(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.log(error);
-        }
+        } catch (error) {}
     }, [chatRoom]);
 
     useEffect(() => {

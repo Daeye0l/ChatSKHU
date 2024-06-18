@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
-import { userprofile } from '../store/profile';
+
 interface Date {
     id: number;
     title: string;
@@ -25,10 +25,7 @@ const useChatList = () => {
             });
 
             setChatList(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.log('error: ', error);
-        }
+        } catch (error) {}
     }, []);
 
     useEffect(() => {
