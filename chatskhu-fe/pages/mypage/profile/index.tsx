@@ -6,6 +6,7 @@ import MypageButton from '../../../components/MypageButton';
 import { useCallback, useState } from 'react';
 import axios from 'axios';
 import defaultProfile from '/public/images/profileIMG.png';
+import { useRouter } from 'next/router';
 
 const Profile = () => {
     const { responseData: userData, setResponseData } = userprofile();
@@ -13,6 +14,7 @@ const Profile = () => {
     const img_url: string | StaticImageData = userData?.imageUrl?.includes('default')
         ? defaultProfile
         : userData?.imageUrl || defaultProfile;
+    const router = useRouter();
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
@@ -45,6 +47,7 @@ const Profile = () => {
                 );
                 console.log(response.data);
                 setResponseData(response.data);
+                router.push('/mypage/info');
             } catch (error) {
                 console.error('Error updating user info:', error);
                 alert('업데이트 중 오류가 발생했습니다.');
