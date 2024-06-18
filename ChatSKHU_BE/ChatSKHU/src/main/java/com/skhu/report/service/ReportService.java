@@ -91,6 +91,7 @@ public class ReportService {
     }
 
 
+    @Transactional
     public ReportDto.ReportPageResponse findReport(int pg, int sz, String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
         Pageable pageable = PageRequest.of(pg-1,sz,Sort.by("id").descending());
@@ -103,6 +104,7 @@ public class ReportService {
         return new ReportDto.ReportPageResponse(reports, totalPage, currentPage);
     }
 
+    @Transactional
     public ReportDto.ReportPageResponse findAll(int pg, int sz) {
         Pageable pageable = PageRequest.of(pg-1,sz,Sort.by("id").descending());
         Page<Report> page = reportRepository.findAllByOrderByCreatedDateDesc(pageable);
@@ -124,5 +126,11 @@ public class ReportService {
                 report.getModifiedDate(),
                 report.getUser().getNickname()
         );
+    }
+
+    @Transactional
+    public ReportDto.ReportAnswerResponse getAnswer(Long reportId) {
+        String answer = reportRepository.findById(reportId).get().getAnswer();
+        return ReportDto.ReportAnswerResponse.builder().answer(answer).build();
     }
 }
