@@ -5,6 +5,7 @@ import com.skhu.oauth.service.UserService;
 import com.skhu.report.dto.ReportDto;
 import com.skhu.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
+@Tag(name = "AdminController", description = "관리자 관련 API")
 public class AdminController {
 
     private final ReportService reportService;

@@ -2,7 +2,6 @@ package com.skhu.oauth.controller;
 
 import com.skhu.oauth.dto.OAuthDto;
 import com.skhu.oauth.dto.UserDto;
-import com.skhu.oauth.service.GoogleOAuthService;
 import com.skhu.oauth.service.KakaoOAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class OAuthController {
 
     private final KakaoOAuthService kakaoOAuthService;
-
-    private final GoogleOAuthService googleOAuthService;
 
     @GetMapping("kakao/callback")
     @Operation(
@@ -37,19 +34,5 @@ public class OAuthController {
         return ResponseEntity.ok(kakaoOAuthService.login(request.getAccessToken()));
     }
 
-    @Operation(
-            summary = "구글 토큰 발급",
-            description = "구글 로그인 후 redirect URL로 쓰는 API")
-    @GetMapping("google/callback")
-    public ResponseEntity<OAuthDto.LoginResponse> googleCallback(@RequestParam String code) {
-        return ResponseEntity.ok(googleOAuthService.getAccessToken(code));
-    }
-    @Operation(
-            summary = "구글 토큰으로 로그인",
-            description = "첫 로그인 시 구글 사용자 정보 데이터베이스에 저장")
-    @GetMapping("google/login")
-    public ResponseEntity<OAuthDto.UserResponse> googleLogin(@RequestParam String accessToken) {
-        return ResponseEntity.ok(googleOAuthService.getUserInfo(accessToken));
-    }
 
 }
