@@ -76,6 +76,8 @@ public class ChatDto {
         List<ChatRoomResponse> yesterday;
         List<ChatRoomResponse> week;
         List<ChatRoomResponse> month;
+        List<ChatRoomResponse> other;
+
     }
 
     @Data

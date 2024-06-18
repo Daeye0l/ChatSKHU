@@ -145,12 +145,14 @@ public class ChatService {
         List<ChatRoom> yesterday = chatRoomRepository.findChatRoomByUserAndModifiedDate(user, now.minusDays(1), now);
         List<ChatRoom> week = chatRoomRepository.findChatRoomByUserAndModifiedDate(user, now.minusDays(7), now.minusDays(1));
         List<ChatRoom> month = chatRoomRepository.findChatRoomByUserAndModifiedDate(user, now.minusDays(30), now.minusDays(7));
+		List<ChatRoom> other = chatRoomRepository.findChatRoomByUserAndOtherDate(user, now.minusDays(30));
 
         return ChatDto.ChatRoomsResponse.builder()
                 .today(convertToDtoList(today))
                 .yesterday(convertToDtoList(yesterday))
                 .week(convertToDtoList(week))
                 .month(convertToDtoList(month))
+				.other(convertToDtoList(other))
                 .build();
     }
 
