@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Header from './Header';
 import Image from 'next/image';
 import closebutton from '/public/images/closebutton.png';
-import kakaoProfileImage from '/public/images/kakaoprofileimage.png';
 import { theme } from '../styles/theme';
 import { useStore } from '../store/store';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,6 +22,13 @@ const Sidebar = () => {
     const router = useRouter();
     const img_url = userData?.imageUrl ?? '';
 
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, []);
     const clickHandler = () => {
         setIsOpen(false);
         router.push('/mypage/info');
