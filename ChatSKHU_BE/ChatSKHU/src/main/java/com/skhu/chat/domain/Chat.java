@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "chat")
@@ -31,6 +33,8 @@ public class Chat extends BaseTimeEntity {
 	@JoinColumn(name = "CHATROOM_ID")
 	private ChatRoom chatRoom;
 
+	@OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Bookmark> bookmarks;
 
 
 	@Builder

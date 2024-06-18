@@ -2,7 +2,6 @@ package com.skhu.report.service;
 
 import com.skhu.oauth.domain.User;
 import com.skhu.oauth.repository.UserRepository;
-import com.skhu.report.domain.Pagination;
 import com.skhu.report.domain.Report;
 import com.skhu.report.dto.ReportDto;
 import com.skhu.report.dto.ReportDto.ReportSearchResponse;
@@ -92,9 +91,23 @@ public class ReportService {
     }
 
 
-    public ReportDto.ReportPageResponse findAll(int pg, int sz, String st) {
+    @Transactional
+    public ReportDto.ReportPageResponse findReport(int pg, int sz, String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
         Pageable pageable = PageRequest.of(pg-1,sz,Sort.by("id").descending());
-        Page<Report> page = reportRepository.findByUserNicknameStartsWithOrTitleStartsWithOrderByCreatedDateDesc(st, st, pageable);
+        Page<Report> page = reportRepository.findByUserOrderByCreatedDateDesc(user, pageable);
+        int totalPage = page.getTotalPages();
+        int currentPage = page.getNumber() + 1;
+        List<ReportSearchResponse> reports = page.getContent().stream()
+                .map(this::convertToReportSearchResponse)
+                .collect(Collectors.toList());
+        return new ReportDto.ReportPageResponse(reports, totalPage, currentPage);
+    }
+
+    @Transactional
+    public ReportDto.ReportPageResponse findAll(int pg, int sz) {
+        Pageable pageable = PageRequest.of(pg-1,sz,Sort.by("id").descending());
+        Page<Report> page = reportRepository.findAllByOrderByCreatedDateDesc(pageable);
         int totalPage = page.getTotalPages();
         int currentPage = page.getNumber() + 1;
         List<ReportSearchResponse> reports = page.getContent().stream()
@@ -113,5 +126,11 @@ public class ReportService {
                 report.getModifiedDate(),
                 report.getUser().getNickname()
         );
+    }
+
+    @Transactional
+    public ReportDto.ReportAnswerResponse getAnswer(Long reportId) {
+        String answer = reportRepository.findById(reportId).get().getAnswer();
+        return ReportDto.ReportAnswerResponse.builder().answer(answer).build();
     }
 }

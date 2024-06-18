@@ -36,6 +36,7 @@ public class UserDto {
     public static class LoginResponse {
         private String accessToken;
         private String refreshToken;
+        private UserRole role;
     }
 
     @Getter

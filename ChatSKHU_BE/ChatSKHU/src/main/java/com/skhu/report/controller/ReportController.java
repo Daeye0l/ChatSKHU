@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/report")
@@ -39,7 +38,18 @@ public class ReportController {
 
 	@Operation(summary = "ReportList 확인", description = "CreatedDate 최신순 Report 목록 조회")
 	@GetMapping("/list")
-	public ResponseEntity<ReportDto.ReportPageResponse> reportList(@RequestParam(value = "pg", defaultValue = "1") int pg, @RequestParam(value = "sz", defaultValue = "10") int sz, @RequestParam(value = "st", defaultValue = "") String st) {
-		return ResponseEntity.ok(reportService.findAll(pg, sz, st));
+	public ResponseEntity<ReportDto.ReportPageResponse> reportList(@RequestParam(value = "pg", defaultValue = "1") int pg, @RequestParam(value = "sz", defaultValue = "9") int sz, Principal principal) {
+		return ResponseEntity.ok(reportService.findReport(pg, sz, principal.getName()));
+	}
+
+	@Operation(summary = "모든 ReportList 확인", description = "CreatedDate 최신순 모든 Report 목록 조회")
+	@GetMapping("/all")
+	public ResponseEntity<ReportDto.ReportPageResponse> allReportList(@RequestParam(value = "pg", defaultValue = "1") int pg, @RequestParam(value = "sz", defaultValue = "9") int sz) {
+		return ResponseEntity.ok(reportService.findAll(pg, sz));
+	}
+
+	@GetMapping("/answer/{reportId}")
+	public ResponseEntity<ReportDto.ReportAnswerResponse> getAnswer(@PathVariable("reportId") Long reportId){
+		return ResponseEntity.ok(reportService.getAnswer(reportId));
 	}
 }

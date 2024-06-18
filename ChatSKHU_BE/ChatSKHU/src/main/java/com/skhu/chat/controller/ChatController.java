@@ -33,8 +33,8 @@ public class ChatController {
 
     @Operation(summary = "ChatList 확인", description = "UserId에 따른 CreatedDate 최신순 Chat 목록 조회")
     @GetMapping("/{chatRoomId}")
-    public ResponseEntity<List<ChatDto.ChatSearchResponse>> chatList(@PathVariable("chatRoomId") Long chatRoomId) {
-        return ResponseEntity.ok(chatService.getChatList(chatRoomId));
+    public ResponseEntity<List<ChatDto.ChatSearchResponse>> chatList(@PathVariable("chatRoomId") Long chatRoomId, Principal principal) {
+        return ResponseEntity.ok(chatService.getChatList(chatRoomId, principal.getName()));
     }
 
     @Operation(

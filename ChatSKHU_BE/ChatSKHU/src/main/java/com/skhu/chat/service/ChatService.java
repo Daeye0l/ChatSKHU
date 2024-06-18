@@ -28,6 +28,7 @@ public class ChatService {
 	private final UserRepository userRepository;
 	private final RestTemplate restTemplate;
 	private final ChatRoomRepository chatRoomRepository;
+	private final BookmarkService bookmarkService;
 
 	@Value("${openai.model}")
 	private String model;
@@ -111,17 +112,12 @@ public class ChatService {
 	}
 	
 	@Transactional
-    public List<ChatDto.ChatSearchResponse> getChatList(Long chatRoomId) {
+    public List<ChatDto.ChatSearchResponse> getChatList(Long chatRoomId, String email) {
         List<Chat> chats = chatRepository.findByChatRoomIdOrderByCreatedDateDesc(chatRoomId);
         
         return chats.stream().map(chat -> {
-        	ChatSearchResponse chatSearchResponse = new ChatSearchResponse();
-			chatSearchResponse.setId(chat.getId());
-        	chatSearchResponse.setQuestion(chat.getQuestion());
-        	chatSearchResponse.setAnswer(chat.getAnswer());
-        	chatSearchResponse.setCreatedDate(chat.getCreatedDate());
-			chatSearchResponse.setChatRoomId(chatRoomId);
-        	return chatSearchResponse;
+			boolean isBookmarked = bookmarkService.isChatBookmarkedByUser(chat.getId(), email);
+        	return ChatSearchResponse.of(chat, isBookmarked);
         }).collect(Collectors.toList());
     }
 	
@@ -188,6 +184,8 @@ public class ChatService {
 	public void deleteChatRoom(Long chatRoomId){
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 				.orElseThrow(() -> new RuntimeException("해당하는 채팅방이 없습니다."));
+
+
 		chatRoomRepository.delete(chatRoom);
 	}
 }

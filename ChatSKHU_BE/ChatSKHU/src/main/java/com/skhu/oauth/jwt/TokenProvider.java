@@ -63,6 +63,7 @@ public class TokenProvider {
         return UserDto.LoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .role(userRole)
                 .build();
     }
 

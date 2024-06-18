@@ -35,14 +35,16 @@ public class ChatDto {
         private String answer;
         private LocalDateTime createdDate;
         private Long chatRoomId;
+        private boolean isBookmarked;
 
-        public static ChatSearchResponse of(Chat chat){
+        public static ChatSearchResponse of(Chat chat, boolean isBookmarked){
             return ChatSearchResponse.builder()
                     .id(chat.getId())
                     .question(chat.getQuestion())
                     .answer(chat.getAnswer())
                     .createdDate(chat.getCreatedDate())
                     .chatRoomId(chat.getChatRoom().getId())
+                    .isBookmarked(isBookmarked)
                     .build();
         }
     }
