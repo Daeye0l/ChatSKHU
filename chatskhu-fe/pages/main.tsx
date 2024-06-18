@@ -25,16 +25,15 @@ const Main = () => {
     const { setResponseData: setUserResponse } = userprofile();
 
     const contentArray = [
-        { id: 0, title: '수강신청', subtitle: '수강신청에 대해서 궁금하신가요?' },
+        { id: 0, title: '수강신청 방법', subtitle: '수강신청 방법에 대해서 궁금하신가요?' },
         { id: 1, title: '마이크로전공', subtitle: '마이크로 전공에 대해서 알려드릴까요?' },
-        { id: 2, title: '승연관 위치', subtitle: '자세한 건물 위치가 궁금하세요?' },
+        { id: 2, title: '승연관', subtitle: '자세한 건물 정보가 궁금하신가요?' },
     ];
 
     useEffect(() => {
         if (chatList) {
             setResponseData(chatList);
         }
-
         if (info) {
             setUserResponse(info);
         }
@@ -81,7 +80,6 @@ const Main = () => {
                     </CenterContainer>
                 </Presentation>
             </EntireContainer>
-
             <Input />
             {isOpen && <Sidebar />}
         </Layout>
