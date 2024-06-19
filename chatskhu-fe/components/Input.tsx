@@ -24,18 +24,18 @@ const Input = ({
 }: Props) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [me, setMe] = useState<string>('');
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // 플래그 추가
 
     const onKeyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMe(e.target.value);
         if (onClient) onClient(e.target.value);
     };
 
-    const onClickHandler = async () => {
-        if (me.trim() === '' || isSubmitting) {
+    const onClickHandler = () => {
+        if (me.trim() === '') {
+            alert('한 자 이상 입력해주세요.');
+            setMe('');
             return;
         }
-        setIsSubmitting(true);
         if (onSetLoading) onSetLoading(true);
         let chatRoom = 0;
         if (typeof window !== 'undefined') {
@@ -44,9 +44,9 @@ const Input = ({
             chatRoom = Number(currentUrl.slice(index + 1, currentUrl.length));
         }
         if (chatRoom > 0) {
-            if (onpostHandler) await onpostHandler(me);
+            if (onpostHandler) onpostHandler(me);
         } else {
-            if (onRequestRoomId) await onRequestRoomId(me);
+            if (onRequestRoomId) onRequestRoomId(me);
         }
         if (onConversation) onConversation();
         if (onClient) onClient('');
@@ -54,16 +54,15 @@ const Input = ({
             textareaRef.current.value = ''; // ref를 사용하여 textarea 값 비우기
         }
         setMe(''); // 상태도 비워줍니다.
-        if (onSetTrigger) onSetTrigger();
-        setIsSubmitting(false);
+        onSetTrigger ? onSetTrigger() : '';
     };
 
     // ENTER로 form 제출
     const onEnterPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === 'Enter' && !e.shiftKey && me.length !== 0 && !isSubmitting) {
+        if (e.key === 'Enter' && !e.shiftKey && me.length !== 0) {
             e.preventDefault();
             e.stopPropagation();
-            await onClickHandler();
+            onClickHandler();
         }
     };
 
