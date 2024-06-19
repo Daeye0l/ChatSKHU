@@ -31,6 +31,10 @@ const Input = ({
     };
 
     const onClickHandler = () => {
+        if (me.trim() === '') {
+            alert('한 자 이상 입력해주세요.');
+            return;
+        }
         if (onSetLoading) onSetLoading(true);
         let chatRoom = 0;
         if (typeof window !== 'undefined') {
@@ -54,9 +58,11 @@ const Input = ({
 
     // ENTER로 form 제출
     const onEnterPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.nativeEvent.isComposing) return;
         if (e.key === 'Enter' && !e.shiftKey && me.length !== 0) {
             e.preventDefault();
             onClickHandler();
+            console.log('눌려지고 있음 ');
         }
     };
 

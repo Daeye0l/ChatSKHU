@@ -33,7 +33,7 @@ const Header = ({ ...props }: Props) => {
                         <Image src={sidebar} alt="sidebar_logo" width={20} height={20} />
                     </div>
                 )}
-                <span>ChatSKHU</span>
+                <span onClick={() => router.push('/main')}>ChatSKHU</span>
                 <Image
                     onClick={() => {
                         router.push('/main');
@@ -68,6 +68,7 @@ const HeaderContainer = styled.header<Props>`
         font-weight: 600;
         flex-grow: 1;
         text-align: center;
+        cursor: pointer;
     }
 
     img {

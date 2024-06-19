@@ -19,6 +19,7 @@ interface Prop {
     };
     title: string;
     subtitle: string;
+    onSetTrigger: () => void;
 }
 
 const handleSubmit = async (text: string) => {
@@ -60,6 +61,7 @@ const FAQ = ({ ...props }: Prop) => {
             {...props}
             onClick={() => {
                 onClickHandler(props.title);
+                props.onSetTrigger();
             }}
         >
             <div>
