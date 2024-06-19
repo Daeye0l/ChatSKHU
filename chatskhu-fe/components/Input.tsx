@@ -24,16 +24,22 @@ const Input = ({
 }: Props) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [me, setMe] = useState<string>('');
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [enterPressed, setEnterPressed] = useState<boolean>(false); // 추가 플래그
 
     const onKeyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMe(e.target.value);
         if (onClient) onClient(e.target.value);
     };
 
-    const onClickHandler = () => {
+    const onClickHandler = async () => {
+        if (isSubmitting) return; // 이미 제출 중이면 아무 것도 하지 않음
+        setIsSubmitting(true); // 제출 중으로 상태 설정
+
         if (me.trim() === '') {
             alert('한 자 이상 입력해주세요.');
             setMe('');
+            setIsSubmitting(false);
             return;
         }
         if (onSetLoading) onSetLoading(true);
@@ -44,9 +50,9 @@ const Input = ({
             chatRoom = Number(currentUrl.slice(index + 1, currentUrl.length));
         }
         if (chatRoom > 0) {
-            if (onpostHandler) onpostHandler(me);
+            if (onpostHandler) await onpostHandler(me);
         } else {
-            if (onRequestRoomId) onRequestRoomId(me);
+            if (onRequestRoomId) await onRequestRoomId(me);
         }
         if (onConversation) onConversation();
         if (onClient) onClient('');
@@ -54,15 +60,21 @@ const Input = ({
             textareaRef.current.value = ''; // ref를 사용하여 textarea 값 비우기
         }
         setMe(''); // 상태도 비워줍니다.
-        onSetTrigger ? onSetTrigger() : '';
+        if (onSetTrigger) onSetTrigger();
+        setIsSubmitting(false); // 제출 완료 후 상태 해제
     };
 
     // ENTER로 form 제출
     const onEnterPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey && me.length !== 0) {
-            e.preventDefault();
-            e.stopPropagation();
-            onClickHandler();
+            if (!enterPressed) {
+                setEnterPressed(true); // Enter 키가 눌린 상태로 설정
+                e.preventDefault();
+                e.stopPropagation();
+                await onClickHandler();
+                console.log('눌려지고 있음');
+                setEnterPressed(false); // Enter 키가 해제된 상태로 설정
+            }
         }
     };
 
