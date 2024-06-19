@@ -27,6 +27,7 @@ const Input = ({
 
     const onKeyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMe(e.target.value);
+        console.log(me);
         if (onClient) onClient(e.target.value);
     };
 
@@ -37,6 +38,10 @@ const Input = ({
             const currentUrl = window.location.href;
             const index = currentUrl.lastIndexOf('/');
             chatRoom = Number(currentUrl.slice(index + 1, currentUrl.length));
+        }
+        if (me === '\n') {
+            alert('한 자 이상 입력해주세요.');
+            return;
         }
         if (chatRoom > 0) {
             if (onpostHandler) onpostHandler(me);

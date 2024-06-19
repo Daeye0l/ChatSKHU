@@ -92,7 +92,13 @@ const Main = () => {
                             </DefaultImg>
                             <FAQsContainer initial="hidden" animate="visible" variants={container}>
                                 {contentArray.map((index) => (
-                                    <FAQ key={index.id} variants={item} title={index.title} subtitle={index.subtitle} />
+                                    <FAQ
+                                        key={index.id}
+                                        variants={item}
+                                        title={index.title}
+                                        subtitle={index.subtitle}
+                                        onSetTrigger={onSetTrigger}
+                                    />
                                 ))}
                             </FAQsContainer>
                         </CenterContainer>

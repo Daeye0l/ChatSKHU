@@ -21,6 +21,10 @@ const Profile = () => {
     };
 
     const onSubmitHandler = () => {
+        if (name === userData?.nickname) {
+            alert('이전 닉네임과 중복됩니다.');
+            return;
+        }
         const formElement = document.querySelector('form');
         if (formElement) {
             const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
